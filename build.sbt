@@ -12,5 +12,6 @@ libraryDependencies ++= Seq(
   javaWs
 )
 libraryDependencies += "mysql" % "mysql-connector-java" % "5.1.34"
+libraryDependencies += "org.projectlombok" % "lombok" % "1.16.8"
 
 fork in run := true
