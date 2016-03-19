@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.11)
 # Database: smartCampus
-# Generation Time: 2016-03-19 03:59:03 +0000
+# Generation Time: 2016-03-19 18:12:12 +0000
 # ************************************************************
 
 
@@ -55,6 +55,24 @@ CREATE TABLE `Event` (
 
 
 
+# Dump of table LiveEvents
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `LiveEvents`;
+
+CREATE TABLE `LiveEvents` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `beaconId` int(11) unsigned NOT NULL,
+  `eventId` int(11) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `beacon` (`beaconId`),
+  KEY `eventsMapping` (`eventId`),
+  CONSTRAINT `beacon` FOREIGN KEY (`beaconId`) REFERENCES `Beacon` (`beaconId`),
+  CONSTRAINT `eventsMapping` FOREIGN KEY (`eventId`) REFERENCES `Event` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
 # Dump of table Location
 # ------------------------------------------------------------
 
@@ -92,7 +110,7 @@ CREATE TABLE `User` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `userName` varchar(255) DEFAULT NULL,
   `role` varchar(64) NOT NULL DEFAULT '',
-  `categories` varchar(255) DEFAULT NULL,
+  `tag` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
