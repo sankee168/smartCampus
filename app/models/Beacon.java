@@ -4,6 +4,7 @@ import com.avaje.ebean.Model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
 /**
@@ -18,5 +19,6 @@ public class Beacon extends Model {
 
     private String data;
 
-    private int locationId;
+    @JoinColumn(name = "locationId")
+    private Location location;
 }
