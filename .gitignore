@@ -8,6 +8,8 @@ target
 /RUNNING_PID
 *.class
 
+/.sbtserver
+
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
