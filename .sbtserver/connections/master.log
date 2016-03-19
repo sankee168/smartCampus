@@ -1,7 +1,0 @@
-New log file opened at Fri Mar 18 20:52:05 EDT 2016 by 4530@Anirudhs-MacBook-Pro.local
-Taking next connection to: 53109
-New client attempting to connect on port: 53110-53109
-  Address = /192.168.0.9:53109
-This client on port 53110 has uuid 60ce6878-d50e-4428-9626-bd2832041773 configName activator humanReadableName Activator protocolVersion 3 featureTags Vector()
-Connected Clients: activator-60ce6878-d50e-4428-9626-bd2832041773
-Taking next connection to: 53109
