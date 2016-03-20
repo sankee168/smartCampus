@@ -4,14 +4,13 @@ import com.avaje.ebean.Model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
 /**
  * Created by mallem on 3/19/16.
  */
 @Entity
-@Table(name = "Beacon")
+@Table(name = "beacon")
 public class Beacon extends Model {
 
     @Id
@@ -19,6 +18,5 @@ public class Beacon extends Model {
 
     private String data;
 
-    @JoinColumn(name = "locationId")
-    private Location location;
+
 }
