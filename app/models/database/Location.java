@@ -1,27 +1,31 @@
-package models;
+package models.database;
 
 import com.avaje.ebean.Model;
+import lombok.Data;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.List;
 
 /**
  * Created by mallem on 3/19/16.
  */
+
+/**
+ * This Table Would be prepopulated
+ */
+@Data
 @Entity
 @Table(name = "location")
 public class Location extends Model {
 
     @Id
+    @GeneratedValue
     private int id;
 
     private String name;
 
     private String description;
 
-    @OneToMany(mappedBy = "location")
-    private List<Beacon> beaconId;
 }

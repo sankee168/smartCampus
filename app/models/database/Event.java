@@ -1,15 +1,14 @@
-package models;
+package models.database;
 
 import com.avaje.ebean.Model;
 import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.sql.Date;
-import java.util.List;
 
 /**
  * Created by mallem on 3/19/16.
@@ -21,18 +20,20 @@ import java.util.List;
 public class Event extends Model {
 
     @Id
+    @GeneratedValue
     private int id;
 
     private String name;
 
-    private int locationId;
+    private String location;
 
-    private Date date;
+    private Date startTime;
+
+    private Date endTime;
 
     private String description;
 
-    @OneToMany(mappedBy = "event")
-    private List<Category> categoryId;
+    private String category;
 
     private String externalLink;
 
