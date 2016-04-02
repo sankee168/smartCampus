@@ -23,7 +23,9 @@ public class Category extends Model {
     @Id
     @GeneratedValue
     private int id;
+
     private String name;
+
     private String description;
 
 }
