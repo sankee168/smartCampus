@@ -9,6 +9,9 @@ import play.data.FormFactory;
 import play.mvc.Controller;
 import play.mvc.Result;
 
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashSet;
 import java.util.List;
 
@@ -36,6 +39,28 @@ public class EventController extends Controller {
         }
 
         return ok(events.toString());
+    }
+
+    public Result createEvent() {
+        DynamicForm form = formFactory.form().bindFromRequest();
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy/hh:mm:ss");
+        try {
+            Date startTime = new Date(format.parse(form.get("startTime")).getTime());
+            Date endTime = new Date(format.parse(form.get("endTime")).getTime());
+            Event event = Event.builder()
+                    .name(form.get("name"))
+                    .description(form.get("description"))
+                    .externalLink(form.get("externalLink"))
+                    .category(form.get("category"))
+                    .startTime(startTime)
+                    .endTime(endTime)
+                    .isActive(Boolean.valueOf(form.get("isActive")))
+                    .location(form.get("location")).build();
+            event.save();
+        } catch (ParseException e) {
+            return badRequest("Invalid Date Format");
+        }
+        return ok();
     }
 
 }

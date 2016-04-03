@@ -1,6 +1,7 @@
 package models.database;
 
 import com.avaje.ebean.Model;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.Entity;
@@ -17,6 +18,7 @@ import javax.persistence.Table;
  */
 @Data
 @Entity
+@Builder
 @Table(name = "location")
 public class Location extends Model {
 

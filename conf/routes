@@ -2,12 +2,6 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# An example controller showing a sample home page
-GET         /                      controllers.HomeController.index
-# An example controller showing how to use dependency injection
-GET         /count                 controllers.CountController.count
-# An example controller showing how to write asynchronous code
-GET         /message               controllers.AsyncController.message
 
 # All Event related API's here....
 GET         /location/all          controllers.LocationController.getAll
@@ -15,11 +9,13 @@ GET         /location/:name        controllers.LocationController.getByName(name
 
 GET         /category/all          controllers.CategoryController.getAll
 GET         /category/:name        controllers.CategoryController.getByName(name: String)
+POST        /category              controllers.CategoryController.createCategory
 
 GET         /user/:userName        controllers.UserController.getUser(userName: String)
 POST        /user                  controllers.UserController.createUser()
 
 POST        /event/category        controllers.EventController.getEventsByCategories()
+POST        /event                 controllers.EventController.createEvent()
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file          controllers.Assets.versioned(path="/public", file: Asset)

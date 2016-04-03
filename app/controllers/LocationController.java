@@ -1,7 +1,10 @@
 package controllers;
 
 import com.avaje.ebean.Ebean;
+import com.google.inject.Inject;
 import models.database.Location;
+import play.data.DynamicForm;
+import play.data.FormFactory;
 import play.mvc.Controller;
 import play.mvc.Result;
 
@@ -12,6 +15,9 @@ import java.util.List;
  */
 public class LocationController extends Controller {
 
+    @Inject
+    FormFactory formFactory;
+
     public Result getAll() {
         List<Location> locList = Ebean.find(Location.class).findList();
         return ok(locList.toString());
@@ -20,5 +26,15 @@ public class LocationController extends Controller {
     public Result getByName(String name) {
         Location loc = Ebean.find(Location.class).where().ieq("name", name).findUnique();
         return ok(loc.toString());
+    }
+
+    public Result createLocation() {
+        DynamicForm form = formFactory.form().bindFromRequest();
+        Location location = Location.builder()
+                .name(form.get("name"))
+                .description(form.get("description"))
+                .build();
+        location.save();
+        return ok();
     }
 }
