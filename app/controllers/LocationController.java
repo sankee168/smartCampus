@@ -8,6 +8,7 @@ import play.data.FormFactory;
 import play.mvc.Controller;
 import play.mvc.Result;
 
+import javax.persistence.PersistenceException;
 import java.util.List;
 
 /**
@@ -34,7 +35,11 @@ public class LocationController extends Controller {
                 .name(form.get("name"))
                 .description(form.get("description"))
                 .build();
-        location.save();
+        try {
+            location.save();
+        } catch (PersistenceException e) {
+            return badRequest("Location Already Exists!!!");
+        }
         return ok();
     }
 }

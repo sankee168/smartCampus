@@ -9,6 +9,7 @@ import play.data.FormFactory;
 import play.mvc.Controller;
 import play.mvc.Result;
 
+import javax.persistence.PersistenceException;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -59,6 +60,8 @@ public class EventController extends Controller {
             event.save();
         } catch (ParseException e) {
             return badRequest("Invalid Date Format");
+        } catch (PersistenceException p) {
+            return badRequest("Event Already Exists");
         }
         return ok();
     }

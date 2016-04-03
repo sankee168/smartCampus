@@ -8,6 +8,8 @@ import play.data.FormFactory;
 import play.mvc.Controller;
 import play.mvc.Result;
 
+import javax.persistence.PersistenceException;
+
 /**
  * Created by mallem on 4/2/16.
  */
@@ -27,7 +29,11 @@ public class UserController extends Controller {
                 .userName(form.get("userName"))
                 .categories(form.get("categories"))
                 .role("user").build();
-        user.save();
+        try {
+            user.save();
+        } catch (PersistenceException p) {
+            return badRequest("userName already exists");
+        }
         return ok();
     }
 }
