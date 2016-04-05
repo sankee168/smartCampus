@@ -3,11 +3,13 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import com.google.inject.Inject;
+import models.database.Beacon;
 import models.database.Event;
 import play.data.DynamicForm;
 import play.data.FormFactory;
 import play.mvc.Controller;
 import play.mvc.Result;
+import views.html.main;
 
 import javax.persistence.PersistenceException;
 import java.sql.Date;
@@ -48,6 +50,7 @@ public class EventController extends Controller {
         try {
             Date startTime = new Date(format.parse(form.get("startTime")).getTime());
             Date endTime = new Date(format.parse(form.get("endTime")).getTime());
+            Beacon beacon = Ebean.find(Beacon.class).where().ieq("id", form.get("beaconId")).findUnique();
             Event event = Event.builder()
                     .name(form.get("name"))
                     .description(form.get("description"))
@@ -56,7 +59,8 @@ public class EventController extends Controller {
                     .startTime(startTime)
                     .endTime(endTime)
                     .isActive(Boolean.valueOf(form.get("isActive")))
-                    .location(form.get("location")).build();
+                    .location(form.get("location"))
+                    .beacon(beacon).build();
             event.save();
         } catch (ParseException e) {
             return badRequest("Invalid Date Format");
@@ -64,6 +68,10 @@ public class EventController extends Controller {
             return badRequest("Event Already Exists");
         }
         return ok();
+    }
+
+    public Result testUI() {
+        return ok(main.render("Test", null));
     }
 
 }

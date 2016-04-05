@@ -4,10 +4,7 @@ import com.avaje.ebean.Model;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.sql.Date;
 
 /**
@@ -39,4 +36,6 @@ public class Event extends Model {
 
     private boolean isActive;
 
+    @ManyToOne
+    private Beacon beacon;
 }

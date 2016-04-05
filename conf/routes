@@ -4,6 +4,9 @@
 
 
 # All Event related API's here....
+GET         /beacon/:id            controllers.BeaconController.getBeaconById(id: String)
+POST        /beacon                controllers.BeaconController.createBeacon
+
 GET         /location/all          controllers.LocationController.getAll
 GET         /location/:name        controllers.LocationController.getByName(name: String)
 
@@ -12,10 +15,14 @@ GET         /category/:name        controllers.CategoryController.getByName(name
 POST        /category              controllers.CategoryController.createCategory
 
 GET         /user/:userName        controllers.UserController.getUser(userName: String)
-POST        /user                  controllers.UserController.createUser()
+POST        /user                  controllers.UserController.createUser
 
-POST        /event/category        controllers.EventController.getEventsByCategories()
-POST        /event                 controllers.EventController.createEvent()
+POST        /event/category        controllers.EventController.getEventsByCategories
+POST        /event                 controllers.EventController.createEvent
+
+GET         /                      controllers.EventController.testUI
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file          controllers.Assets.versioned(path="/public", file: Asset)
+
+GET         /webjars/*file         controllers.WebJarAssets.at(file)
