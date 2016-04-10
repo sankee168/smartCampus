@@ -1,0 +1,12 @@
+.event:nth-of-type(odd) {
+    background-color: #ccc;
+}
+
+.event-body {
+    padding: 15px;
+}
+
+.event-title {
+    font-size: 20px;
+    font-weight: bold;
+}
