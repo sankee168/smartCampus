@@ -7,6 +7,7 @@
 GET         /beacon/:id            controllers.BeaconController.getBeaconById(id: String)
 POST        /beacon                controllers.BeaconController.createBeacon
 
+
 GET         /location/all          controllers.LocationController.getAll
 GET         /location/:name        controllers.LocationController.getByName(name: String)
 
