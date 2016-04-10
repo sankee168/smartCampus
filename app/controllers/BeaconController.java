@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import models.database.Beacon;
 import models.database.Event;
+import models.database.User;
 import play.data.Form;
 import play.data.FormFactory;
 import play.mvc.Controller;
@@ -13,7 +14,9 @@ import play.twirl.api.Html;
 import scala.collection.JavaConverters;
 import views.html.event;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by mallem on 4/5/16.
@@ -39,5 +42,29 @@ public class BeaconController extends Controller {
                 .id(Integer.parseInt(form.data().get("id"))).build();
         beacon.save();
         return ok();
+    }
+
+    public Result getEventsByUser(String id, String userId) {
+        List<User> users = Ebean.find(User.class).where().ieq("id", userId).findList();
+        List<String> categories = new ArrayList<>();
+        List<Event> returnEvents = new ArrayList<>();
+        Iterator<User> iter = users.iterator();
+        while(iter.hasNext()) {
+            User curr = iter.next();
+            categories.add(curr.getCategories());
+        }
+        Beacon beacon = Ebean.find(Beacon.class).where().ieq("id", id).findUnique();
+
+        List<Event> allEvents = beacon.getEvents();
+
+        Iterator<Event> eventIter = allEvents.iterator();
+        while(eventIter.hasNext()) {
+            Event currEvent = eventIter.next();
+            if(categories.contains(currEvent.getCategory())) {
+                returnEvents.add(currEvent);
+            }
+        }
+
+        return ok(event.render(returnEvents));
     }
 }

@@ -44,6 +44,8 @@ public class EventController extends Controller {
         return ok(events.toString());
     }
 
+
+
     public Result createEvent() {
         DynamicForm form = formFactory.form().bindFromRequest();
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy/ hh:mm:ss");
