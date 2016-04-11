@@ -50,11 +50,11 @@ create table location (
 ;
 
 create table user (
-  id                        integer auto_increment not null,
+  device_id                 integer auto_increment not null,
   user_name                 varchar(255),
   role                      varchar(255),
   categories                varchar(255),
-  constraint pk_user primary key (id))
+  constraint pk_user primary key (device_id))
 ;
 
 alter table event add constraint fk_event_beacon_1 foreign key (beacon_id) references beacon (id) on delete restrict on update restrict;

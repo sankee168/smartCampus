@@ -1,6 +1,7 @@
 package controllers;
 
 import com.avaje.ebean.Ebean;
+import com.avaje.ebean.ExpressionList;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import models.database.Beacon;
@@ -11,12 +12,12 @@ import play.data.FormFactory;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.twirl.api.Html;
+import references.Constants;
 import scala.collection.JavaConverters;
 import views.html.event;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * Created by mallem on 4/5/16.
@@ -66,6 +67,30 @@ public class BeaconController extends Controller {
         return ok(event.render(returnEvents));
     }
 
+    public Result getEventsByBeacons() {
+        String deviceId = "";
+        String[] beaconIds = new String[Constants.KeyWords.TOTAL_NUMBER_OF_BEACONS];
+
+        final Set<Map.Entry<String,String[]>> entries = request().queryString().entrySet();
+        for (Map.Entry<String,String[]> entry : entries) {
+            if(entry.getKey().equals(Constants.KeyWords.DEVICE_ID)){
+                deviceId = Arrays.toString(entry.getValue());
+            }
+            else if(entry.getKey().equals(Constants.KeyWords.BEACON_ID)){
+                beaconIds = entry.getValue();
+            }
+//            final String key = entry.getKey();
+//            final String value = Arrays.toString(entry.getValue());
+//            System.out.println(key + " " + value);
+        }
+
+        User currUser = Ebean.find(User.class).where().ieq("deviceId", deviceId).findUnique();
+        String[] listOfCategories = currUser.getCategories().split(",");
+
+
+        return ok("asdasd");
+    }
+
     public boolean ifIntersectionExists(List<String> categories, String dbCategory) {
         String[] dbCategories = dbCategory.split(",");
         for(int i = 0; i< dbCategories.length; i++) {
@@ -75,4 +100,6 @@ public class BeaconController extends Controller {
         }
         return false;
     }
+
+
 }

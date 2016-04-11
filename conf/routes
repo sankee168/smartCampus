@@ -7,6 +7,7 @@
 GET         /beacon/:id                         controllers.BeaconController.getBeaconById(id: String)
 POST        /beacon                             controllers.BeaconController.createBeacon
 GET         /beacon/:id/user/:userId            controllers.BeaconController.getEventsByUser(id: String, userId: String)
+GET         /beacons/                           controllers.BeaconController.getEventsByBeacons()
 
 
 GET         /location/all          controllers.LocationController.getAll

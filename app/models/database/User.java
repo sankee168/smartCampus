@@ -19,8 +19,7 @@ import javax.persistence.Table;
 public class User extends Model {
 
     @Id
-    @GeneratedValue
-    private int id;
+    private int deviceId;
 
     private String userName;
 
