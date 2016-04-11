@@ -22,28 +22,14 @@
          * the page content. *@
         @content
         <div class="container">
-            <div class="row">
-                <div class="col-xs-12 event">
-                    <div class="event-body">
-                        <div class="event-title">E1</div>
-                        <div class="event-description">New event 1</div>
-                    </div>
-                </div>
-                <div class="col-xs-12 event">
-                    <div class="event-body">
-                        <div class="event-title">E2</div>
-                        <div class="event-description">New event 2</div>
-                    </div>
-                </div>
-                <div class="col-xs-12 event">
-                    <div class="event-body">
-                        <div class="event-title">E3</div>
-                        <div class="event-description">New event 3</div>
-                    </div>
+            <div class="row events">
+                <div class="col-xs-12 event-loading">
+                    <div>Loading ...</div>
+                    <img src="@routes.Assets.versioned("images/loading.gif")" alt="" width="20px">
                 </div>
             </div>
             <div class="row">
-                <button type="button" class="btn btn-primary" style="margin-top: 10px;" onclick="window.location.reload()">Reload</button>
+                <button type="button" class="btn btn-primary reload-events">Reload</button>
             </div>
         </div>
     </body>

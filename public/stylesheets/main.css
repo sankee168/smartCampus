@@ -10,3 +10,12 @@
     font-size: 20px;
     font-weight: bold;
 }
+
+.event-loading {
+    text-align: center;
+    padding: 15px;
+}
+
+.reload-events {
+    margin-top: 10px;
+}
