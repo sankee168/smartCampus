@@ -9,6 +9,8 @@ import play.data.DynamicForm;
 import play.data.FormFactory;
 import play.mvc.Controller;
 import play.mvc.Result;
+import views.html.createEvent;
+import views.html.event;
 import views.html.main;
 
 import javax.persistence.PersistenceException;
@@ -44,7 +46,9 @@ public class EventController extends Controller {
         return ok(events.toString());
     }
 
-
+    public Result getEventPage() {
+        return ok(createEvent.render());
+    }
 
     public Result createEvent() {
         DynamicForm form = formFactory.form().bindFromRequest();
@@ -69,7 +73,8 @@ public class EventController extends Controller {
         } catch (PersistenceException p) {
             return badRequest("Event Already Exists");
         }
-        return ok();
+//        return ok();
+        return ok(createEvent.render());
     }
 
     public Result testUI() {

@@ -21,6 +21,7 @@ POST        /user                  controllers.UserController.createUser
 
 POST        /event/category        controllers.EventController.getEventsByCategories
 POST        /event                 controllers.EventController.createEvent
+GET         /getEvent              controllers.EventController.getEventPage
 
 GET         /                      controllers.EventController.testUI
 

@@ -26,8 +26,6 @@ public class BeaconController extends Controller {
     @Inject
     FormFactory formFactory;
 
-    @Inject
-    ObjectMapper objectMapper;
 
     public Result getBeaconById(String id) {
         Beacon beacon = Ebean.find(Beacon.class).where().ieq("id", id).findUnique();
@@ -60,11 +58,21 @@ public class BeaconController extends Controller {
         Iterator<Event> eventIter = allEvents.iterator();
         while(eventIter.hasNext()) {
             Event currEvent = eventIter.next();
-            if(categories.contains(currEvent.getCategory())) {
+            if(ifIntersectionExists(categories, currEvent.getCategory())) {
                 returnEvents.add(currEvent);
             }
         }
 
         return ok(event.render(returnEvents));
+    }
+
+    public boolean ifIntersectionExists(List<String> categories, String dbCategory) {
+        String[] dbCategories = dbCategory.split(",");
+        for(int i = 0; i< dbCategories.length; i++) {
+            if(categories.contains(dbCategories[i])) {
+                return true;
+            }
+        }
+        return false;
     }
 }
