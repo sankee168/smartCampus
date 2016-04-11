@@ -18,7 +18,7 @@ public class BeaconLocation extends Model {
 
     @Id
     @GeneratedValue
-    private int beaconId;
+    private String beaconId;
 
     private String location;
 

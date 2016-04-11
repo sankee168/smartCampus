@@ -29,14 +29,14 @@ public class BeaconController extends Controller {
         return ok(event.render(beacon.getEvents()));
     }
 
-    public Result createBeacon() {
-        Form<Beacon> form = formFactory.form(Beacon.class).bindFromRequest();
-
-        Beacon beacon = Beacon.builder().description(form.data().get("description"))
-                .id(Integer.parseInt(form.data().get("id"))).build();
-        beacon.save();
-        return ok();
-    }
+//    public Result createBeacon() {
+//        Form<Beacon> form = formFactory.form(Beacon.class).bindFromRequest();
+//
+//        Beacon beacon = Beacon.builder().description(form.data().get("description"))
+//                .id(Integer.parseInt(form.data().get("id"))).build();
+//        beacon.save();
+//        return ok();
+//    }
 
     public Result getEventsByUser(String id, String userId) {
         List<User> users = Ebean.find(User.class).where().ieq("id", userId).findList();
@@ -70,10 +70,11 @@ public class BeaconController extends Controller {
         final Set<Map.Entry<String, String[]>> entries = request().queryString().entrySet();
         for (Map.Entry<String, String[]> entry : entries) {
             if (entry.getKey().equals(Constants.KeyWords.DEVICE_ID)) {
-                deviceId = entry.getValue()[0];
+                deviceId= entry.getValue()[0];
             } else if (entry.getKey().equals(Constants.KeyWords.BEACON_ID)) {
                 beaconIds = entry.getValue();
-            } else {
+            }
+            else {
                 System.out.println("Invalid query parameter");
             }
         }
@@ -112,8 +113,8 @@ public class BeaconController extends Controller {
         String[] eventCategories = eventCategory.split(",");
 
         for (int i = 0; i < dbCategories.length; i++) {
-            for (int j = 0; j < eventCategories.length; j++) {
-                if (dbCategories[i].equals(eventCategories[j]))
+            for(int j = 0; j < eventCategories.length; j++){
+                if(dbCategories[i].equals(eventCategories[j]))
                     return true;
             }
         }

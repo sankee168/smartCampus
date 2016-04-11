@@ -19,7 +19,7 @@ import javax.persistence.Table;
 public class User extends Model {
 
     @Id
-    private int deviceId;
+    private String deviceId;
 
     private String userName;
 

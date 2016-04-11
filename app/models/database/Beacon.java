@@ -17,7 +17,7 @@ import java.util.List;
 public class Beacon extends Model {
 
     @Id
-    private int id;
+    private String id;
 
     private String description;
 

@@ -4,19 +4,19 @@
 # --- !Ups
 
 create table beacon (
-  id                        integer auto_increment not null,
+  id                        varchar(255) not null,
   description               varchar(255),
   constraint pk_beacon primary key (id))
 ;
 
 create table beacon_category (
-  beacon_id                 integer auto_increment not null,
+  beacon_id                 varchar(255) not null,
   category                  varchar(255),
   constraint pk_beacon_category primary key (beacon_id))
 ;
 
 create table beacon_location (
-  beacon_id                 integer auto_increment not null,
+  beacon_id                 varchar(255) not null,
   location                  varchar(255),
   constraint pk_beacon_location primary key (beacon_id))
 ;
@@ -38,7 +38,7 @@ create table event (
   category                  varchar(255),
   external_link             varchar(255),
   is_active                 tinyint(1) default 0,
-  beacon_id                 integer,
+  beacon_id                 varchar(255),
   constraint pk_event primary key (id))
 ;
 
@@ -50,7 +50,7 @@ create table location (
 ;
 
 create table user (
-  device_id                 integer auto_increment not null,
+  device_id                 varchar(255) not null,
   user_name                 varchar(255),
   role                      varchar(255),
   categories                varchar(255),

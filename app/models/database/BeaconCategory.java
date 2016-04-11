@@ -15,7 +15,7 @@ import javax.persistence.Table;
 public class BeaconCategory {
 
     @Id
-    private int beaconId;
+    private String beaconId;
 
     private String category;
 }
