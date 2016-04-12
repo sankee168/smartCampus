@@ -5,12 +5,13 @@ import com.avaje.ebean.Ebean;
 import com.google.inject.Inject;
 import models.database.Beacon;
 import models.database.Event;
+import models.database.Location;
 import play.data.DynamicForm;
+import play.data.Form;
 import play.data.FormFactory;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.createEvent;
-import views.html.event;
 import views.html.main;
 
 import javax.persistence.PersistenceException;
@@ -19,6 +20,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by mallem on 3/19/16.
@@ -47,34 +49,42 @@ public class EventController extends Controller {
     }
 
     public Result getEventPage() {
-        return ok(createEvent.render());
+        Form<Event> eventForm = formFactory.form(Event.class);
+        List<Location> locations = Ebean.find(Location.class).findList();
+        return ok(createEvent.render(eventForm, locations));
     }
 
+    /*
+        TODO : Should render success page with link to go to all events created.
+        TODO : Take locations through multi select. Fix start/end time
+        TODO : Find a way to plugin createdBy(Take it as input in GET request)
+     */
     public Result createEvent() {
-        DynamicForm form = formFactory.form().bindFromRequest();
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy/ hh:mm:ss");
+        Map<String, String[]> form = request().body().asFormUrlEncoded();
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
         try {
-            Date startTime = new Date(format.parse(form.get("startTime")).getTime());
-            Date endTime = new Date(format.parse(form.get("endTime")).getTime());
-            Beacon beacon = Ebean.find(Beacon.class).where().ieq("id", form.get("beaconId")).findUnique();
+            Date startTime = new Date(format.parse(form.get("startTime")[0]).getTime());
+            Date endTime = new Date(format.parse(form.get("endTime")[0]).getTime());
+            Beacon beacon = Ebean.find(Beacon.class).where().ieq("id", form.get("beaconId")[0]).findUnique();
             Event event = Event.builder()
-                    .name(form.get("name"))
-                    .description(form.get("description"))
-                    .externalLink(form.get("externalLink"))
-                    .category(form.get("category"))
+                    .name(form.get("name")[0])
+                    .description(form.get("description")[0])
+                    .externalLink(form.get("externalLink")[0])
+                    .category(form.get("category")[0])
                     .startTime(startTime)
                     .endTime(endTime)
-                    .isActive(Boolean.valueOf(form.get("isActive")))
-                    .location(form.get("location"))
+                    .isActive(Boolean.valueOf(form.get("isActive")[0]))
+                    .location(form.get("location")[0])
+                    .createdBy(Integer.parseInt(form.get("createdBy")[0]))
                     .beacon(beacon).build();
             event.save();
-        } catch (ParseException e) {
-            return badRequest("Invalid Date Format");
+
         } catch (PersistenceException p) {
             return badRequest("Event Already Exists");
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-//        return ok();
-        return ok(createEvent.render());
+        return ok();
     }
 
     public Result testUI() {

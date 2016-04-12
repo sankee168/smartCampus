@@ -4,10 +4,8 @@ import com.avaje.ebean.Model;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by mallem on 3/19/16.
@@ -29,5 +27,8 @@ public class Location extends Model {
     private String name;
 
     private String description;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "location")
+    private List<Beacon> beacons;
 
 }

@@ -38,4 +38,6 @@ public class Event extends Model {
 
     @ManyToOne
     private Beacon beacon;
+
+    private int createdBy;
 }

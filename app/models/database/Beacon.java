@@ -23,4 +23,7 @@ public class Beacon extends Model {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "beacon")
     private List<Event> events;
+
+    @ManyToOne
+    private Location location;
 }
