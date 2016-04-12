@@ -14,7 +14,7 @@ public class Experiments {
 
     public void method() {
         User user = User.builder().userName("asdas").role("asdas").categories("asdfashjgdas").build();
-        Beacon beacon = Beacon.builder().id(1).description("asdasd").build();
+//        Beacon beacon = Beacon.builder().id(1).description("asdasd").build();
 
 
         Ebean.save(user);
