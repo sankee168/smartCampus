@@ -59,6 +59,8 @@ public class EventController extends Controller {
         TODO : Should render success page with link to go to all events created.
         TODO : Take locations through multi select. Fix start/end time
         TODO : Find a way to plugin createdBy(Take it as input in GET request)
+        TODO : convert category into multiselect
+        TODO : prof suggests that we should show events even though the user is not subscribed to them based on timings (e.g., say showing food related events to most of the users at 4 pm.) Make a plan of action for the same.
      */
     public Result createEvent() {
         Map<String, String[]> form = request().body().asFormUrlEncoded();
