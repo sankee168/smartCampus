@@ -19,3 +19,24 @@
 .reload-events {
     margin-top: 10px;
 }
+
+.frame {
+    background: url(https://c2.staticflickr.com/2/1338/957441704_1338dc75f6_b.jpg) no-repeat  center center fixed #000;
+
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+.frame .alpha {
+    padding: 50px 80px;
+    background: rgba(0,0,0,0.3);
+}
+
+.form {
+    margin: 0 auto;
+    width:250px;
+}
+
+
+
