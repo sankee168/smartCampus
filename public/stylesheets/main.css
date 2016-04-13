@@ -40,3 +40,16 @@
 
 
 
+
+
+.create-user-form {
+
+}
+
+.categories {
+    margin-top: 10px;
+    border: 0px solid #fff;
+    padding: 1px;
+    border-radius: 4px;
+    width: 100% !important;
+}

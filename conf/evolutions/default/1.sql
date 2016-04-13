@@ -16,6 +16,12 @@ create table beacon_category (
   constraint pk_beacon_category primary key (beacon_id))
 ;
 
+create table beacon_location (
+  beacon_id                 varchar(255) not null,
+  location                  varchar(255),
+  constraint pk_beacon_location primary key (beacon_id))
+;
+
 create table category (
   id                        integer auto_increment not null,
   name                      varchar(255),
@@ -34,7 +40,7 @@ create table event (
   external_link             varchar(255),
   is_active                 tinyint(1) default 0,
   beacon_id                 varchar(255),
-  created_by                integer,
+  created_by                varchar(255),
   constraint pk_event primary key (id))
 ;
 
@@ -67,6 +73,8 @@ SET FOREIGN_KEY_CHECKS=0;
 drop table beacon;
 
 drop table beacon_category;
+
+drop table beacon_location;
 
 drop table category;
 
