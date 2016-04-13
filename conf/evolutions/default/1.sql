@@ -16,12 +16,6 @@ create table beacon_category (
   constraint pk_beacon_category primary key (beacon_id))
 ;
 
-create table beacon_location (
-  beacon_id                 varchar(255) not null,
-  location                  varchar(255),
-  constraint pk_beacon_location primary key (beacon_id))
-;
-
 create table category (
   id                        integer auto_increment not null,
   name                      varchar(255),
@@ -73,8 +67,6 @@ SET FOREIGN_KEY_CHECKS=0;
 drop table beacon;
 
 drop table beacon_category;
-
-drop table beacon_location;
 
 drop table category;
 

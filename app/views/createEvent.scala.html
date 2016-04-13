@@ -1,6 +1,8 @@
 @import helper._
 @(eventForm: play.data.Form[models.database.Event])(locations: java.util.List[models.database.Location])
 
+
+
 <link href=' @routes.WebJarAssets.at(WebJarAssets.locate("css/bootstrap.min.css"))' rel='stylesheet' >
 <script src='@routes.WebJarAssets.at(WebJarAssets.locate("jquery.min.js"))' type='text/javascript' ></script>
 <link rel="stylesheet" href='@routes.Assets.versioned("stylesheets/main.css")'>
@@ -51,15 +53,27 @@
                   <textarea cols="30" rows="10" placeholder="Description" class="form-control" name="description"></textarea>
                 </div>
                 </div>
+                <form id="select2Form" method="post" class="form-horizontal">
               <div class="form-group col-xs-12">
                 <div class="col-xs-12">
-                  <select name="beaconLocations[]" multiple="multiple">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="4">4</option>
-                  </select>
+
+                    <div class="col-xs-12">
+                        <select name="beaconLocations[]" class="form-control select2-select"
+                        multiple data-placeholder="Choose beacon locations">
+                            <option value="1">Marston</option>
+                            <option value="2">Cise</option>
+                            <option value="4">Hub</option>
+                        </select>
+                    </div>
+                  @*<select name="beaconLocations[]" multiple="multiple">*@
+                   @*<select  class="js-example-basic-multiple" multiple="multiple">*@
+                    @*<option value="1">1</option>*@
+                    @*<option value="2">2</option>*@
+                    @*<option value="4">4</option>*@
+                  @*</select>*@
                 </div>
               </div>
+                </form>
               <div class="form-group col-xs-8">
                 <div class="col-xs-12"></div>
                 <button type="submit" class="btn btn-primary btn-lg">Submit</button>
@@ -74,7 +88,27 @@
 
 </div>
       </div>
-    </div>
+  </div>
+
+
+
+          <!-- Include Select2 CSS -->
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.css" />
+
+          <!-- CSS to make Select2 fit in with Bootstrap 3.x -->
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2-bootstrap.min.css" />
+
+          <!-- Include Select2 JS -->
+      <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
+
+
+
+
+
+  <script type="text/javascript">
+          $('select').select2();
+  </script>
+
 
 }
 }
