@@ -48,7 +48,8 @@ public class EventController extends Controller {
         return ok(events.toString());
     }
 
-    public Result getEventPage() {
+    public Result getEventPage(String deviceId) {
+        //todo: see if this devcieId is registered and has admin rights. If deviceId is registered then render the createEvent Page or other thing
         Form<Event> eventForm = formFactory.form(Event.class);
         List<Location> locations = Ebean.find(Location.class).findList();
         return ok(createEvent.render(eventForm, locations));
@@ -58,6 +59,8 @@ public class EventController extends Controller {
         TODO : Should render success page with link to go to all events created.
         TODO : Take locations through multi select. Fix start/end time
         TODO : Find a way to plugin createdBy(Take it as input in GET request)
+        TODO : convert category into multiselect
+        TODO : prof suggests that we should show events even though the user is not subscribed to them based on timings (e.g., say showing food related events to most of the users at 4 pm.) Make a plan of action for the same.
      */
     public Result createEvent() {
         Map<String, String[]> form = request().body().asFormUrlEncoded();
@@ -89,6 +92,16 @@ public class EventController extends Controller {
 
     public Result testUI() {
         return ok(main.render("Test", null));
+    }
+
+    public Result getRecommendedEvents(String deviceId) {
+        //todo: return get recommened events for the user
+        return ok();
+    }
+
+    public Result getStarredEvents(String deviceId) {
+        //todo: return starred events for the user
+        return ok();
     }
 
 }

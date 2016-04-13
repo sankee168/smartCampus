@@ -23,7 +23,9 @@ POST        /user                           controllers.UserController.createUse
 
 POST        /event/category                 controllers.EventController.getEventsByCategories
 POST        /event                          controllers.EventController.createEvent
-GET         /event                          controllers.EventController.getEventPage
+GET         /event/:id                      controllers.EventController.getEventPage(id: String)
+GET         /recommendedEvents/:id          controllers.EventController.getRecommendedEvents(id: String)
+GET         /starredEvents/:id              controllers.EventController.getStarredEvents(id: String)
 
 GET         /                               controllers.EventController.testUI
 
