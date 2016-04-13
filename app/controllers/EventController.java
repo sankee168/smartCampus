@@ -48,7 +48,8 @@ public class EventController extends Controller {
         return ok(events.toString());
     }
 
-    public Result getEventPage() {
+    public Result getEventPage(String deviceId) {
+        //todo: see if this devcieId is registered and has admin rights. If deviceId is registered then render the createEvent Page or other thing
         Form<Event> eventForm = formFactory.form(Event.class);
         List<Location> locations = Ebean.find(Location.class).findList();
         return ok(createEvent.render(eventForm, locations));
@@ -89,6 +90,16 @@ public class EventController extends Controller {
 
     public Result testUI() {
         return ok(main.render("Test", null));
+    }
+
+    public Result getRecommendedEvents(String deviceId) {
+        //todo: return get recommened events for the user
+        return ok();
+    }
+
+    public Result getStarredEvents(String deviceId) {
+        //todo: return starred events for the user
+        return ok();
     }
 
 }
