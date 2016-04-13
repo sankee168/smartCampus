@@ -75,7 +75,7 @@ public class EventController extends Controller {
                     .endTime(endTime)
                     .isActive(Boolean.valueOf(form.get("isActive")[0]))
                     .location(form.get("location")[0])
-                    .createdBy(Integer.parseInt(form.get("createdBy")[0]))
+                    .createdBy(form.get("createdBy")[0])
                     .beacon(beacon).build();
             event.save();
 

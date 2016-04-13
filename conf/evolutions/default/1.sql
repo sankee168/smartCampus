@@ -6,6 +6,7 @@
 create table beacon (
   id                        varchar(255) not null,
   description               varchar(255),
+  location_id               integer,
   constraint pk_beacon primary key (id))
 ;
 
@@ -39,6 +40,7 @@ create table event (
   external_link             varchar(255),
   is_active                 tinyint(1) default 0,
   beacon_id                 varchar(255),
+  created_by                varchar(255),
   constraint pk_event primary key (id))
 ;
 
@@ -57,8 +59,10 @@ create table user (
   constraint pk_user primary key (device_id))
 ;
 
-alter table event add constraint fk_event_beacon_1 foreign key (beacon_id) references beacon (id) on delete restrict on update restrict;
-create index ix_event_beacon_1 on event (beacon_id);
+alter table beacon add constraint fk_beacon_location_1 foreign key (location_id) references location (id) on delete restrict on update restrict;
+create index ix_beacon_location_1 on beacon (location_id);
+alter table event add constraint fk_event_beacon_2 foreign key (beacon_id) references beacon (id) on delete restrict on update restrict;
+create index ix_event_beacon_2 on event (beacon_id);
 
 
 

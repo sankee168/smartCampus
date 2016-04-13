@@ -1,0 +1,30 @@
+@main("Create User") {
+    <div class="item">
+        @*<img src="@routes.Assets.versioned("images/createUser.jpg")" alt="">*@
+        <div class="container">
+            <div class="row create-user-form carousel-caption">
+                @*<h1>Register</h1>*@
+                <p class="lead">Welcome to SmartCampus!</p>
+                <p class="lead">Signup now!</p>
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <input type="text" class="form-control" id="userName" placeholder="Name" required="">
+
+                        <select data-placeholder="Categories" multiple="" tabindex="3" class="chosen-select categories">
+                            <option value=""></option>
+                            <option value="food">food</option>
+                            <option value="play">play</option>
+                            <option value="drinks">drinks</option>
+                            <option value="hackathon">hackathon</option>
+                            <option value="lecture">lecture</option>
+                            <option value="football">football</option>
+                            <option value="computer science">computer science</option>
+
+                        </select>
+                    </div>
+                </div>
+                <a class="btn btn-large btn-primary" href="#">Submit</a>
+            </div>
+        </div>
+    </div>
+}
