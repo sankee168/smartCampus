@@ -5,7 +5,6 @@ import com.google.inject.Inject;
 import models.database.Beacon;
 import models.database.Event;
 import models.database.User;
-import play.data.Form;
 import play.data.FormFactory;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -70,11 +69,10 @@ public class BeaconController extends Controller {
         final Set<Map.Entry<String, String[]>> entries = request().queryString().entrySet();
         for (Map.Entry<String, String[]> entry : entries) {
             if (entry.getKey().equals(Constants.KeyWords.DEVICE_ID)) {
-                deviceId= entry.getValue()[0];
+                deviceId = entry.getValue()[0];
             } else if (entry.getKey().equals(Constants.KeyWords.BEACON_ID)) {
                 beaconIds = entry.getValue();
-            }
-            else {
+            } else {
                 System.out.println("Invalid query parameter");
             }
         }
@@ -113,8 +111,8 @@ public class BeaconController extends Controller {
         String[] eventCategories = eventCategory.split(",");
 
         for (int i = 0; i < dbCategories.length; i++) {
-            for(int j = 0; j < eventCategories.length; j++){
-                if(dbCategories[i].equals(eventCategories[j]))
+            for (int j = 0; j < eventCategories.length; j++) {
+                if (dbCategories[i].equals(eventCategories[j]))
                     return true;
             }
         }
