@@ -19,7 +19,7 @@ import play.inject.ApplicationLifecycle;
  * in the {@link Module} class to see how this happens.
  *
  * This class needs to run code when the server stops. It uses the
- * application's {@link ApplicationLifecycle} to register a stop hook.
+ * application's {@link ApplicationLifecycle} to createUser a stop hook.
  */
 @Singleton
 public class ApplicationTimer {
@@ -36,7 +36,7 @@ public class ApplicationTimer {
         start = clock.instant();
         Logger.info("ApplicationTimer demo: Starting application at " + start);
 
-        // When the application starts, register a stop hook with the
+        // When the application starts, createUser a stop hook with the
         // ApplicationLifecyle object. The code inside the stop hook wil
         // be run when the application stops.
         appLifecycle.addStopHook(() -> {

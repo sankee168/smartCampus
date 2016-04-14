@@ -9,6 +9,7 @@ import play.data.FormFactory;
 import play.mvc.Controller;
 import play.mvc.Result;
 import references.Constants;
+import views.html.createUser;
 import views.html.event;
 
 import java.util.*;
@@ -78,22 +79,26 @@ public class BeaconController extends Controller {
         }
 
         User user = Ebean.find(User.class).where().ieq("deviceId", deviceId).findUnique();
-//        String[] listOfCategories = currUser.getCategories().split(",");
-
-        List<Beacon> beacons = Ebean.find(Beacon.class).where().in("id", beaconIds).findList();
-        Iterator<Beacon> beaconIter = beacons.iterator();
-        while (beaconIter.hasNext()) {
-            Beacon currBeacon = beaconIter.next();
-            Iterator<Event> currEventsIterator = currBeacon.getEvents().iterator();
-            while (currEventsIterator.hasNext()) {
-                Event currEvent = currEventsIterator.next();
-                if (ifCategoryMatches(user.getCategories(), currEvent.getCategory())) {
-                    returnEvents.add(currEvent);
+        if(user != null) {
+            List<Beacon> beacons = Ebean.find(Beacon.class).where().in("id", beaconIds).findList();
+            Iterator<Beacon> beaconIter = beacons.iterator();
+            while (beaconIter.hasNext()) {
+                Beacon currBeacon = beaconIter.next();
+                Iterator<Event> currEventsIterator = currBeacon.getEvents().iterator();
+                while (currEventsIterator.hasNext()) {
+                    Event currEvent = currEventsIterator.next();
+                    if (ifCategoryMatches(user.getCategories(), currEvent.getCategory())) {
+                        returnEvents.add(currEvent);
+                    }
                 }
             }
-        }
 
-        return ok(event.render(returnEvents));
+            return ok(event.render(returnEvents));
+        }
+        else{
+            //todo: redirect to page to create the user
+            return ok(createUser.render());
+        }
     }
 
     public boolean ifIntersectionExists(List<String> categories, String dbCategory) {
