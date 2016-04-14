@@ -6,13 +6,16 @@ import com.google.inject.Inject;
 import models.database.Beacon;
 import models.database.Event;
 import models.database.Location;
+import models.database.User;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.data.FormFactory;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.createEvent;
+import views.html.createUser;
 import views.html.main;
+import views.html.nopermission;
 
 import javax.persistence.PersistenceException;
 import java.sql.Date;
@@ -49,10 +52,27 @@ public class EventController extends Controller {
     }
 
     public Result getEventPage(String deviceId) {
-        //todo: see if this devcieId is registered and has admin rights. If deviceId is registered then render the createEvent Page or other thing
+        boolean isAdmin = false;
+        User user = Ebean.find(User.class).where().ieq("device_id", deviceId).findUnique();
         Form<Event> eventForm = formFactory.form(Event.class);
         List<Location> locations = Ebean.find(Location.class).findList();
-        return ok(createEvent.render(eventForm, locations));
+
+        if (user != null) {
+            String[] roles = user.getRole().split(",");
+            for (int i = 0; i < roles.length; i++) {
+                if (roles[i].equals("ADMIN")) {
+                    isAdmin = true;
+                    break;
+                }
+            }
+            if (isAdmin) {
+                return ok(createEvent.render(eventForm, locations));
+            } else {
+                return ok(nopermission.render());
+            }
+        } else {
+            return ok(createUser.render());
+        }
     }
 
     /*
