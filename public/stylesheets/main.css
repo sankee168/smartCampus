@@ -41,7 +41,7 @@
 
 body {
     /*background: url("/assets/images/smartCampus.jpg") no-repeat  center center fixed #000;*/
-    background-image: url("/assets/images/smartCampus.jpg") ;
+    background-image: url("/assets/images/smartCampus.jpg");
 
     -webkit-background-size: cover;
     -moz-background-size: cover;

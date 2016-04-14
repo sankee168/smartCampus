@@ -3,9 +3,11 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import com.google.inject.Inject;
-import models.database.*;
+import models.database.Category;
+import models.database.Event;
+import models.database.Location;
+import models.database.User;
 import play.data.DynamicForm;
-import play.data.Form;
 import play.data.FormFactory;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -51,19 +53,18 @@ public class EventController extends Controller {
     public Result getEventPage(String deviceId) {
         boolean isAdmin = false;
         User user = Ebean.find(User.class).where().ieq("device_id", deviceId).findUnique();
-        Form<Event> eventForm = formFactory.form(Event.class);
         List<Location> locations = Ebean.find(Location.class).findList();
 
         if (user != null) {
             String[] roles = user.getRole().split(",");
             for (int i = 0; i < roles.length; i++) {
-                if (roles[i].equals("ADMIN")) {
+                if (roles[i].equalsIgnoreCase("admin")) {
                     isAdmin = true;
                     break;
                 }
             }
             if (isAdmin) {
-                return ok(createEvent.render(eventForm, locations));
+                return ok(createEvent.render(locations, deviceId));
             } else {
                 return ok(nopermission.render());
             }
@@ -76,7 +77,6 @@ public class EventController extends Controller {
     /*
         TODO : Should render success page with link to go to all events created.
         TODO : Take locations through multi select. Fix start/end time
-        TODO : Find a way to plugin createdBy(Take it as input in GET request)
         TODO : convert category into multiselect
         TODO : prof suggests that we should show events even though the user is not subscribed to them based on timings (e.g., say showing food related events to most of the users at 4 pm.) Make a plan of action for the same.
      */
@@ -86,7 +86,8 @@ public class EventController extends Controller {
         try {
             Date startTime = new Date(format.parse(form.get("startTime")[0]).getTime());
             Date endTime = new Date(format.parse(form.get("endTime")[0]).getTime());
-            Beacon beacon = Ebean.find(Beacon.class).where().ieq("id", form.get("beaconId")[0]).findUnique();
+
+
             Event event = Event.builder()
                     .name(form.get("name")[0])
                     .description(form.get("description")[0])
@@ -97,7 +98,7 @@ public class EventController extends Controller {
                     .isActive(Boolean.valueOf(form.get("isActive")[0]))
                     .location(form.get("location")[0])
                     .createdBy(form.get("createdBy")[0])
-                    .beacon(beacon).build();
+                    .build();
             event.save();
 
         } catch (PersistenceException p) {

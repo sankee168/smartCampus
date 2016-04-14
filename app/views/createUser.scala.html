@@ -10,14 +10,12 @@
         <div class="container create-user-outer">
             <div class="row create-user-form">
                 @*<h1>Register</h1>*@
-                <div class="form-group col-xs-12 create-user-inner">
+                <div class="text-center col-xs-12 create-user-inner">
                     <p class="lead">Welcome to SmartCampus!</p>
                     <p class="lead">Signup now!</p>
                     @form(routes.UserController.createUser, 'class -> "form-horizontal", 'id -> "select2Form") {
-                        <div class="form-group col-xs-12">
-                            <div class="col-xs-12">
-                                <input type="text" class="form-control" id="userName" placeholder="Name" name="userName">
-                            </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="userName" placeholder="Name" name="userName">
                         </div>
                         <div class="form-group">
                             <select name="categories" class="form-control select2-select"
@@ -28,7 +26,7 @@
                             </select>
                         </div>
                         <input type="hidden" name="deviceId" value=@deviceId>
-                        <div class="form-group col-xs-8">
+                        <div class="form-group">
                             <div class="col-xs-12"></div>
                             <button type="submit" class="btn btn-primary btn-lg">Submit</button>
                         </div>
