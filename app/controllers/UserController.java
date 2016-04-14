@@ -3,12 +3,12 @@ package controllers;
 import com.avaje.ebean.Ebean;
 import com.google.inject.Inject;
 import models.database.User;
-import play.data.DynamicForm;
 import play.data.FormFactory;
 import play.mvc.Controller;
 import play.mvc.Result;
 
 import javax.persistence.PersistenceException;
+import java.util.Map;
 
 /**
  * Created by mallem on 4/2/16.
@@ -24,10 +24,20 @@ public class UserController extends Controller {
     }
 
     public Result createUser() {
-        DynamicForm form = formFactory.form().bindFromRequest();
+        Map<String, String[]> form = request().body().asFormUrlEncoded();
+        String[] categoryList = form.get("categories");
+        String categories = "";
+        if (categoryList != null) {
+            for (String category : categoryList) {
+                categories += category + ",";
+            }
+        } else {
+            categories += "all";
+        }
         User user = User.builder()
-                .userName(form.get("userName"))
-                .categories(form.get("categories"))
+                .deviceId(form.get("deviceId")[0])
+                .userName(form.get("userName")[0])
+                .categories(categories)
                 .role("user").build();
         try {
             user.save();

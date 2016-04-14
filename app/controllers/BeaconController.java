@@ -3,6 +3,7 @@ package controllers;
 import com.avaje.ebean.Ebean;
 import com.google.inject.Inject;
 import models.database.Beacon;
+import models.database.Category;
 import models.database.Event;
 import models.database.User;
 import play.data.FormFactory;
@@ -97,7 +98,8 @@ public class BeaconController extends Controller {
         }
         else{
             //todo: redirect to page to create the user
-            return ok(createUser.render());
+            List<Category> categoryList = Ebean.find(Category.class).findList();
+            return ok(createUser.render(deviceId, categoryList));
         }
     }
 

@@ -3,10 +3,7 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import com.google.inject.Inject;
-import models.database.Beacon;
-import models.database.Event;
-import models.database.Location;
-import models.database.User;
+import models.database.*;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.data.FormFactory;
@@ -71,7 +68,8 @@ public class EventController extends Controller {
                 return ok(nopermission.render());
             }
         } else {
-            return ok(createUser.render());
+            List<Category> categories = Ebean.find(Category.class).findList();
+            return ok(createUser.render(deviceId, categories));
         }
     }
 
