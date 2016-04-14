@@ -25,6 +25,7 @@ public class BeaconController extends Controller {
 
 
     public Result getBeaconById(String id) {
+
         Beacon beacon = Ebean.find(Beacon.class).where().ieq("id", id).findUnique();
 //        scala.collection.immutable.List<String> ls = JavaConverters.asScalaBufferConverter(beacon.getEvents()).asScala();
         return ok(event.render(beacon.getEvents()));
