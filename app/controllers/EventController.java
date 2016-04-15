@@ -3,23 +3,18 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import com.google.inject.Inject;
-import models.database.Category;
-import models.database.Event;
-import models.database.Location;
-import models.database.User;
+import models.database.*;
 import play.data.DynamicForm;
 import play.data.FormFactory;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.html.createEvent;
-import views.html.createUser;
-import views.html.main;
-import views.html.nopermission;
+import views.html.*;
 
 import javax.persistence.PersistenceException;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -53,8 +48,7 @@ public class EventController extends Controller {
     public Result getEventPage(String deviceId) {
         boolean isAdmin = false;
         User user = Ebean.find(User.class).where().ieq("device_id", deviceId).findUnique();
-        List<Location> locations = Ebean.find(Location.class).findList();
-
+        List<Category> categories = Ebean.find(Category.class).findList();
         if (user != null) {
             String[] roles = user.getRole().split(",");
             for (int i = 0; i < roles.length; i++) {
@@ -64,20 +58,18 @@ public class EventController extends Controller {
                 }
             }
             if (isAdmin) {
-                return ok(createEvent.render(locations, deviceId));
+                List<Location> locations = Ebean.find(Location.class).findList();
+                return ok(createEvent.render(locations, categories, deviceId));
             } else {
                 return ok(nopermission.render());
             }
         } else {
-            List<Category> categories = Ebean.find(Category.class).findList();
             return ok(createUser.render(deviceId, categories));
         }
     }
 
     /*
-        TODO : Should render success page with link to go to all events created.
-        TODO : Take locations through multi select. Fix start/end time
-        TODO : convert category into multiselect
+        TODO : Fix start/end time
         TODO : prof suggests that we should show events even though the user is not subscribed to them based on timings (e.g., say showing food related events to most of the users at 4 pm.) Make a plan of action for the same.
      */
     public Result createEvent() {
@@ -87,16 +79,16 @@ public class EventController extends Controller {
             Date startTime = new Date(format.parse(form.get("startTime")[0]).getTime());
             Date endTime = new Date(format.parse(form.get("endTime")[0]).getTime());
 
-
             Event event = Event.builder()
                     .name(form.get("name")[0])
                     .description(form.get("description")[0])
                     .externalLink(form.get("externalLink")[0])
-                    .category(form.get("category")[0])
+                    .category(getCategories(form.get("categories")))
                     .startTime(startTime)
                     .endTime(endTime)
                     .isActive(Boolean.valueOf(form.get("isActive")[0]))
                     .location(form.get("location")[0])
+                    .beacons(getBeaconsForEvent(form.get("beaconLocations")))
                     .createdBy(form.get("createdBy")[0])
                     .build();
             event.save();
@@ -104,9 +96,34 @@ public class EventController extends Controller {
         } catch (PersistenceException p) {
             return badRequest("Event Already Exists");
         } catch (ParseException e) {
-            e.printStackTrace();
+            return badRequest("Bad Request From UI");
         }
-        return ok();
+        return redirect("/events/" + form.get("createdBy")[0]);
+    }
+
+    private String getCategories(String[] categories) {
+        String result = "";
+        if (categories != null) {
+            for (String category : categories) {
+                result += category + ",";
+            }
+        }
+        return result;
+    }
+
+    private List<Beacon> getBeaconsForEvent(String[] locations) {
+        List<Beacon> beacons = new ArrayList<>();
+        if (locations != null) {
+            for (String location : locations) {
+                beacons.addAll(Ebean.find(Location.class).where().ieq("name", location).findUnique().getBeacons());
+            }
+        }
+        return beacons;
+    }
+
+    public Result getEventsByUser(String user) {
+        List<Event> eventList = Ebean.find(Event.class).where().ieq("createdBy", user).findList();
+        return ok(events.render(eventList));
     }
 
     public Result testUI() {

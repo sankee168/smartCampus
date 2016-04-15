@@ -28,7 +28,12 @@ public class Location extends Model {
 
     private String description;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "location")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "location")
     private List<Beacon> beacons;
+
+    @Override
+    public String toString() {
+        return "id=" + id + "desc=" + description + "name=" + name;
+    }
 
 }

@@ -2,10 +2,8 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import com.google.inject.Inject;
-import models.database.Beacon;
-import models.database.Category;
-import models.database.Event;
-import models.database.User;
+import models.database.*;
+import play.data.DynamicForm;
 import play.data.FormFactory;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -31,15 +29,19 @@ public class BeaconController extends Controller {
         return ok(event.render(beacon.getEvents()));
     }
 
-//    public Result createBeacon() {
-//        Form<Beacon> form = formFactory.form(Beacon.class).bindFromRequest();
-//
-//        Beacon beacon = Beacon.builder().description(form.data().get("description"))
-//                .id(Integer.parseInt(form.data().get("id"))).build();
-//        beacon.save();
-//        return ok();
-//    }
+    public Result createBeacon() {
+        DynamicForm form = formFactory.form().bindFromRequest();
+        Location loc = Ebean.find(Location.class).where().ieq("name", form.get("location")).findUnique();
+        List<Event> events = Ebean.find(Event.class).findList();
+        Beacon beacon = Beacon.builder().description(form.get("description"))
+                .id(form.get("id")).location(loc).events(events).build();
+        beacon.save();
+        return ok();
+    }
 
+    /*
+     * TODO : Need to refactor this based on new changes in Beacon/Location schema.
+     */
     public Result getEventsByUser(String id, String userId) {
         List<User> users = Ebean.find(User.class).where().ieq("id", userId).findList();
         List<String> categories = new ArrayList<>();

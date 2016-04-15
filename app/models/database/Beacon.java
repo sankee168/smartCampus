@@ -21,9 +21,15 @@ public class Beacon extends Model {
 
     private String description;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "beacon")
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "beacon_events")
     private List<Event> events;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Location location;
+
+    @Override
+    public String toString() {
+        return "id=" + id + "desc=" + description;
+    }
 }

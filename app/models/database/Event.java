@@ -6,6 +6,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.List;
 
 /**
  * Created by mallem on 3/19/16.
@@ -36,8 +37,10 @@ public class Event extends Model {
 
     private boolean isActive;
 
-    @ManyToOne
-    private Beacon beacon;
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
+    @JoinTable(name = "beacon_events")
+    private List<Beacon> beacons;
 
     private String createdBy;
 }
