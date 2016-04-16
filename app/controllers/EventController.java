@@ -185,4 +185,8 @@ public class EventController extends Controller {
         return ok(event.render(deviceId, curEvent));
     }
 
+    public Result getNoLiveEventsPage() {
+        return ok(noevents.render());
+    }
+
 }
