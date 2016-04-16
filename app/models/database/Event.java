@@ -43,4 +43,12 @@ public class Event extends Model {
     private List<Beacon> beacons;
 
     private String createdBy;
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String getDescription(){
+        return this.description;
+    }
 }

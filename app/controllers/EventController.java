@@ -2,22 +2,39 @@ package controllers;
 
 
 import com.avaje.ebean.Ebean;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.inject.Inject;
 import models.database.*;
 import play.data.DynamicForm;
 import play.data.FormFactory;
+import play.libs.Json;
+import play.libs.ws.*;
 import play.mvc.Controller;
 import play.mvc.Result;
+import references.Constants;
+import scala.util.parsing.json.JSONObject;
 import views.html.*;
 
 import javax.persistence.PersistenceException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.CompletionStage;
+
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
 
 /**
  * Created by mallem on 3/19/16.
@@ -26,6 +43,8 @@ public class EventController extends Controller {
 
     @Inject
     FormFactory formFactory;
+    @Inject
+    WSClient ws;
 
     public Result getEventsByLocation(String location) {
         List<Event> eventList = Ebean.find(Event.class).where().ieq("location", location).findList();
@@ -130,9 +149,23 @@ public class EventController extends Controller {
         return ok(main.render("Test", null));
     }
 
-    public Result getRecommendedEvents(String deviceId) {
-        //todo: return get recommened events for the user
-        return ok();
+    public Result getRecommendedEvents(String deviceId) throws IOException {
+        String result = "";
+        URL url = new URL(Constants.Urls.ML_URL + deviceId + "/");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        String line;
+        while ((line = rd.readLine()) != null) {
+            result = result + line;
+        }
+        rd.close();
+        JsonNode json = Json.parse(result);
+        //this will have the json variable and convert this into eventIds
+        json.get(Constants.KeyWords.ML_EVENT_IDS);
+
+        List<String> eventIds = new ArrayList<>();
+        return ok(events.render(Ebean.find(Event.class).where().in("id", eventIds).findList()));
     }
 
     public Result getStarredEvents(String deviceId) {

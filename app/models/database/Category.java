@@ -30,4 +30,7 @@ public class Category extends Model {
 
     private String description;
 
+    public String getName() {
+        return this.name;
+    }
 }

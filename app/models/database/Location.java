@@ -36,4 +36,12 @@ public class Location extends Model {
         return "id=" + id + "desc=" + description + "name=" + name;
     }
 
+    public String getName() {
+        return this.name;
+    }
+
+    public String getDescription() {
+        return this.getDescription();
+    }
 }
+

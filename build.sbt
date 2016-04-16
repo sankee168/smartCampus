@@ -16,7 +16,9 @@ libraryDependencies ++= Seq(
   "org.webjars" % "jquery" % "1.8.3",
   "mysql" % "mysql-connector-java" % "5.1.34",
   "org.projectlombok" % "lombok" % "1.16.8",
-  javaJdbc,
+  "com.sun.jersey" % "jersey-client" % "1.19",
+  "com.google.code.gson" % "gson" % "1.7.1",
+    javaJdbc,
   cache,
   javaWs
 )
