@@ -9,7 +9,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import references.Constants;
 import views.html.createUser;
-import views.html.event;
+import views.html.events;
 
 import java.util.*;
 
@@ -25,8 +25,7 @@ public class BeaconController extends Controller {
     public Result getBeaconById(String id) {
 
         Beacon beacon = Ebean.find(Beacon.class).where().ieq("id", id).findUnique();
-//        scala.collection.immutable.List<String> ls = JavaConverters.asScalaBufferConverter(beacon.getEvents()).asScala();
-        return ok(event.render(beacon.getEvents()));
+        return ok(events.render(beacon.getEvents()));
     }
 
     public Result createBeacon() {
@@ -43,27 +42,20 @@ public class BeaconController extends Controller {
      * TODO : Need to refactor this based on new changes in Beacon/Location schema.
      */
     public Result getEventsByUser(String id, String userId) {
-        List<User> users = Ebean.find(User.class).where().ieq("id", userId).findList();
-        List<String> categories = new ArrayList<>();
+        User user = Ebean.find(User.class).where().ieq("id", userId).findUnique();
         List<Event> returnEvents = new ArrayList<>();
-        Iterator<User> iter = users.iterator();
-        while (iter.hasNext()) {
-            User curr = iter.next();
-            categories.add(curr.getCategories());
-        }
+        Event currEvent;
         Beacon beacon = Ebean.find(Beacon.class).where().ieq("id", id).findUnique();
-
         List<Event> allEvents = beacon.getEvents();
-
         Iterator<Event> eventIter = allEvents.iterator();
         while (eventIter.hasNext()) {
-            Event currEvent = eventIter.next();
-            if (ifIntersectionExists(categories, currEvent.getCategory())) {
+            currEvent = eventIter.next();
+            if (ifCategoryMatches(user.getCategories(), currEvent.getCategory())) {
                 returnEvents.add(currEvent);
             }
         }
 
-        return ok(event.render(returnEvents));
+        return ok(events.render(returnEvents));
     }
 
     public Result getEventsByBeacons() {
@@ -97,36 +89,22 @@ public class BeaconController extends Controller {
                 }
             }
 
-            return ok(event.render(returnEvents));
+            return ok(events.render(returnEvents));
         }
         else{
-            //todo: redirect to page to create the user
+            // Redirect the Page to Create the User
             List<Category> categoryList = Ebean.find(Category.class).findList();
             return ok(createUser.render(deviceId, categoryList));
         }
     }
 
-    public boolean ifIntersectionExists(List<String> categories, String dbCategory) {
-        String[] dbCategories = dbCategory.split(",");
-        for (int i = 0; i < dbCategories.length; i++) {
-            if (categories.contains(dbCategories[i])) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public boolean ifCategoryMatches(String userCategories, String eventCategory) {
-        String[] dbCategories = userCategories.split(",");
         String[] eventCategories = eventCategory.split(",");
 
-        for (int i = 0; i < dbCategories.length; i++) {
-            for (int j = 0; j < eventCategories.length; j++) {
-                if (dbCategories[i].equals(eventCategories[j]))
-                    return true;
-            }
+        for (int i = 0; i < eventCategories.length; i++) {
+            if (userCategories.contains(eventCategories[i]))
+                return true;
         }
         return false;
-
     }
 }

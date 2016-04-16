@@ -29,7 +29,7 @@ public class EventController extends Controller {
 
     public Result getEventsByLocation(String location) {
         List<Event> eventList = Ebean.find(Event.class).where().ieq("location", location).findList();
-        return ok(eventList.toString());
+        return ok(events.render(eventList));
     }
 
     public Result getEventsByCategories() {
@@ -39,13 +39,14 @@ public class EventController extends Controller {
         HashSet<Event> events = new HashSet<>();
 
         for (String category : categories) {
-            events.addAll(Ebean.find(Event.class).where().ieq("category", category).ieq("is_active", "1").findList());
+            //events.addAll(Ebean.find(Event.class).where().ieq("category", category).ieq("is_active", "1").findList());
+            events.addAll(Ebean.find(Event.class).where().in("category", categories).ieq("is_active", "1").findList());
         }
 
         return ok(events.toString());
     }
 
-    public Result getEventPage(String deviceId) {
+    public Result createEventPage(String deviceId) {
         boolean isAdmin = false;
         User user = Ebean.find(User.class).where().ieq("device_id", deviceId).findUnique();
         List<Category> categories = Ebean.find(Category.class).findList();
@@ -121,7 +122,7 @@ public class EventController extends Controller {
         return beacons;
     }
 
-    public Result getEventsByUser(String user) {
+    public Result getEventsByAdmin(String user) {
         List<Event> eventList = Ebean.find(Event.class).where().ieq("createdBy", user).findList();
         return ok(events.render(eventList));
     }
@@ -136,7 +137,6 @@ public class EventController extends Controller {
     }
 
     public Result getStarredEvents(String deviceId) {
-        //todo: return starred events for the user
         User user = Ebean.find(User.class).where().ieq("device_id", deviceId).findUnique();
         return ok(events.render(user.getEvents()));
     }
