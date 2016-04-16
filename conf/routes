@@ -12,21 +12,22 @@ GET         /beacons/                       controllers.BeaconController.getEven
 
 
 GET         /location/all                   controllers.LocationController.getAll
-GET         /location/:name                 controllers.LocationController.getByName(name: String)
+GET         /location/:name               controllers.LocationController.getByName(name: String)
 
-GET         /category/all                   controllers.CategoryController.getAll
-GET         /category/:name                 controllers.CategoryController.getByName(name: String)
-POST        /category                       controllers.CategoryController.createCategory
+GET         /category/all                 controllers.CategoryController.getAll
+GET         /category/:name               controllers.CategoryController.getByName(name: String)
+POST        /category                     controllers.CategoryController.createCategory
 
-GET         /user/:userName                 controllers.UserController.getUser(userName: String)
-POST        /user                           controllers.UserController.createUser
+GET         /user/:userName               controllers.UserController.getUser(userName: String)
+POST        /user                         controllers.UserController.createUser
+POST        /starred                      controllers.UserController.addEventToUser
 
-POST        /event/category                 controllers.EventController.getEventsByCategories
-POST        /event/new                      controllers.EventController.createEvent
-GET         /event/new/:id                  controllers.EventController.getEventPage(id: String)
-GET         /events/:id                     controllers.EventController.getEventsByUser(id: String)
-GET         /recommendedEvents/:id          controllers.EventController.getRecommendedEvents(id: String)
-GET         /starredEvents/:id              controllers.EventController.getStarredEvents(id: String)
+POST        /event/category               controllers.EventController.getEventsByCategories
+POST        /event/new                    controllers.EventController.createEvent
+GET         /event/new/:id                controllers.EventController.getEventPage(id: String)
+GET         /events/:id                   controllers.EventController.getEventsByUser(id: String)
+GET         /recommendedEvents/:id        controllers.EventController.getRecommendedEvents(id: String)
+GET         /starredEvents/:id            controllers.EventController.getStarredEvents(id: String)
 
 GET         /                               controllers.EventController.testUI
 

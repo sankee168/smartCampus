@@ -137,7 +137,8 @@ public class EventController extends Controller {
 
     public Result getStarredEvents(String deviceId) {
         //todo: return starred events for the user
-        return ok();
+        User user = Ebean.find(User.class).where().ieq("device_id", deviceId).findUnique();
+        return ok(events.render(user.getEvents()));
     }
 
 }

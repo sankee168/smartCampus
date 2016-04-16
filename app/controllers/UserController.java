@@ -2,7 +2,9 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import com.google.inject.Inject;
+import models.database.Event;
 import models.database.User;
+import play.data.DynamicForm;
 import play.data.FormFactory;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -43,6 +45,20 @@ public class UserController extends Controller {
             user.save();
         } catch (PersistenceException p) {
             return badRequest("userName already exists");
+        }
+        return ok();
+    }
+
+    /* Add events starred by users. Should be called from each Event page */
+    public Result addEventToUser() {
+        DynamicForm form = formFactory.form().bindFromRequest();
+        User user = Ebean.find(User.class).where().ieq("device_id", form.get("deviceId")).findUnique();
+        Event event = Ebean.find(Event.class).where().ieq("id", form.get("eventId")).findUnique();
+        user.getEvents().add(event);
+        try {
+            user.save();
+        } catch (PersistenceException e) {
+            return badRequest("Already Starred Event");
         }
         return ok();
     }
