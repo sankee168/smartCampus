@@ -13,11 +13,12 @@ public class Constants {
     }
 
     static public class Urls {
-        public static final String ML_URL = "http://jsonplaceholder.typicode.com/posts/1";
+        public static final String ML_URL_POST = "http://192.168.0.7:7070";
+        public static final String ML_URL_GET = "http://192.168.0.7:8000/";
+
     }
 
     static public class MlConstants {
-        public static final String EVENT_CREATION = "EventCreation";
         public static final String SET = "$set";
         public static final String EVENT = "event";
         public static final String USER = "user";

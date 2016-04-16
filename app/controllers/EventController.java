@@ -70,7 +70,7 @@ public class EventController extends Controller {
         if (user != null) {
             String[] roles = user.getRole().split(",");
             for (int i = 0; i < roles.length; i++) {
-                if (roles[i].equalsIgnoreCase("admin")) {
+                if (roles[i].equalsIgnoreCase("ADMIN")) {
                     isAdmin = true;
                     break;
                 }
@@ -110,6 +110,7 @@ public class EventController extends Controller {
                     .createdBy(form.get("createdBy")[0])
                     .build();
             event.save();
+            //todo: push to mlserver
             io.prediction.Event eventToBePushed = logConvertor.convertCreatedEvent(event);
             Logger.info(Constants.KeyWords.LOG_SEPERATOR +  Json.toJson(eventToBePushed).toString());
             pushToMLServer.pushEvent(eventToBePushed);
@@ -154,7 +155,7 @@ public class EventController extends Controller {
 
     public Result getRecommendedEvents(String deviceId) throws IOException {
         String result = "";
-        URL url = new URL(Constants.Urls.ML_URL + deviceId + "/");
+        URL url = new URL(Constants.Urls.ML_URL_GET + deviceId + "/");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
         BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -174,6 +175,14 @@ public class EventController extends Controller {
     public Result getStarredEvents(String deviceId) {
         User user = Ebean.find(User.class).where().ieq("device_id", deviceId).findUnique();
         return ok(events.render(user.getEvents()));
+    }
+
+    public Result getSingleEventPage(String deviceId, String eventId) {
+        Event curEvent = Ebean.find(Event.class).where().ieq("id", eventId).findUnique();
+        io.prediction.Event eventToBePushed = logConvertor.convertViewedEvent(deviceId, eventId);
+        Logger.info(Constants.KeyWords.LOG_SEPERATOR +  Json.toJson(eventToBePushed).toString());
+        pushToMLServer.pushEvent(eventToBePushed);
+        return ok(event.render(deviceId, curEvent));
     }
 
 }

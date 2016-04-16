@@ -4,35 +4,37 @@
 
 
 # All Event related API's here....
-GET         /beacon/:id                     controllers.BeaconController.getBeaconById(id: String)
-POST        /beacon/                         controllers.BeaconController.createBeacon
-GET         /beacon/:id/user/:userId        controllers.BeaconController.getEventsByUser(id: String, userId: String)
-GET         /beacons/                        controllers.BeaconController.getEventsByBeacons()
+GET         /beacon/:beaconId                     controllers.BeaconController.getBeaconById(beaconId: String)
+POST        /beacon                               controllers.BeaconController.createBeacon
+GET         /beacon/:beaconId/user/:userId        controllers.BeaconController.getEventsForUser(beaconId: String, userId: String)
+GET         /beacons                              controllers.BeaconController.getEventsByBeacons()
 
 
 
 #GET         /location/all                 controllers.LocationController.getAll
 #GET         /location/:name               controllers.LocationController.getByName(name: String)
-POST        /location                       controllers.LocationController.createLocation
+POST        /location                             controllers.LocationController.createLocation
 
 #GET         /category/all                 controllers.CategoryController.getAll
 #GET         /category/:name               controllers.CategoryController.getByName(name: String)
-POST        /category                       controllers.CategoryController.createCategory
+POST        /category                             controllers.CategoryController.createCategory
 
-#GET         /user/:userName               controllers.UserController.getUser(userName: String)
-POST        /user                           controllers.UserController.createUser
-POST        /starred                        controllers.UserController.addEventToUser
+#GET         /user/:userName                controllers.UserController.getUser(userName: String)
+POST        /user                                 controllers.UserController.createUser
+POST        /starred                              controllers.UserController.addEventToUser
 
-POST        /event/category                 controllers.EventController.getEventsByCategories
-POST        /event/new                      controllers.EventController.createEvent
-GET         /event/new/:id                  controllers.EventController.createEventPage(id: String)
-GET         /events/:id                     controllers.EventController.getEventsByAdmin(id: String)
-GET         /recommendedEvents/:id          controllers.EventController.getRecommendedEvents(id: String)
-GET         /starredEvents/:id              controllers.EventController.getStarredEvents(id: String)
+POST        /event/category                       controllers.EventController.getEventsByCategories
+POST        /event                                controllers.EventController.createEvent
 
-GET         /                               controllers.EventController.testUI
+GET         /event/new/:adminId                   controllers.EventController.createEventPage(adminId: String)
+GET         /events/:adminId                      controllers.EventController.getEventsByAdmin(adminId: String)
+GET         /recommendedEvents/:userId           controllers.EventController.getRecommendedEvents(userId: String)
+GET         /starredEvents/:userId               controllers.EventController.getStarredEvents(userId: String)
+GET         /:userId/event/:eventId               controllers.EventController.getSingleEventPage(userId: String, eventId: String)
+
+GET         /                                     controllers.EventController.testUI
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                   controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file                         controllers.Assets.versioned(path="/public", file: Asset)
 
-GET         /webjars/*file                  controllers.WebJarAssets.at(file)
+GET         /webjars/*file                        controllers.WebJarAssets.at(file)

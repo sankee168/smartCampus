@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutionException;
  */
 public class PushToMLServer {
     public void pushEvent(Event event) {
-        EventClient client = new EventClient(Constants.MlConstants.ACCESS_KEY);
+        EventClient client = new EventClient(Constants.MlConstants.ACCESS_KEY, Constants.Urls.ML_URL_POST);
         try {
             client.createEvent(event);
         } catch (ExecutionException e) {
