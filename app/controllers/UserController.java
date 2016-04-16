@@ -2,10 +2,17 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import com.google.inject.Inject;
+import helpers.ConvertToLogFormat;
+import helpers.PushToMLServer;
+import models.database.Event;
 import models.database.User;
+import play.Logger;
+import play.data.DynamicForm;
 import play.data.FormFactory;
+import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import references.Constants;
 
 import javax.persistence.PersistenceException;
 import java.util.Map;
@@ -17,6 +24,8 @@ public class UserController extends Controller {
 
     @Inject
     FormFactory formFactory;
+    ConvertToLogFormat logFormat = new ConvertToLogFormat();
+    PushToMLServer pushToMLServer = new PushToMLServer();
 
     public Result getUser(String username) {
         User user = Ebean.find(User.class).where().ieq("user_name", username).findUnique();
@@ -44,6 +53,28 @@ public class UserController extends Controller {
         } catch (PersistenceException p) {
             return badRequest("userName already exists");
         }
+        //todo: psuh to mlserver
+        io.prediction.Event eventToBePushed = logFormat.convertCreateUser(user);
+        Logger.info(Constants.KeyWords.LOG_SEPERATOR + Json.toJson(eventToBePushed).toString());
+        pushToMLServer.pushEvent(eventToBePushed);
+        return ok();
+    }
+
+    /* Add events starred by users. Should be called from each Event page */
+    public Result addEventToUser() {
+        DynamicForm form = formFactory.form().bindFromRequest();
+        User user = Ebean.find(User.class).where().ieq("device_id", form.get("deviceId")).findUnique();
+        Event event = Ebean.find(Event.class).where().ieq("id", form.get("eventId")).findUnique();
+        user.getEvents().add(event);
+
+        try {
+            user.save();
+        } catch (PersistenceException e) {
+            return badRequest("Already Starred Event");
+        }
+        //todo: psuh to mlserver
+        io.prediction.Event eventToBePushed = logFormat.convertStarredEvent(form.get("deviceId"), form.get("eventId"));
+        Logger.info(Constants.KeyWords.LOG_SEPERATOR + Json.toJson(eventToBePushed).toString());
         return ok();
     }
 }

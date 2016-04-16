@@ -58,6 +58,12 @@ create table beacon_events (
   event_id                       integer not null,
   constraint pk_beacon_events primary key (beacon_id, event_id))
 ;
+
+create table user_events (
+  event_id                       integer not null,
+  user_device_id                 varchar(255) not null,
+  constraint pk_user_events primary key (event_id, user_device_id))
+;
 alter table beacon add constraint fk_beacon_location_1 foreign key (location_id) references location (id) on delete restrict on update restrict;
 create index ix_beacon_location_1 on beacon (location_id);
 
@@ -66,6 +72,10 @@ create index ix_beacon_location_1 on beacon (location_id);
 alter table beacon_events add constraint fk_beacon_events_beacon_01 foreign key (beacon_id) references beacon (id) on delete restrict on update restrict;
 
 alter table beacon_events add constraint fk_beacon_events_event_02 foreign key (event_id) references event (id) on delete restrict on update restrict;
+
+alter table user_events add constraint fk_user_events_event_01 foreign key (event_id) references event (id) on delete restrict on update restrict;
+
+alter table user_events add constraint fk_user_events_user_02 foreign key (user_device_id) references user (device_id) on delete restrict on update restrict;
 
 # --- !Downs
 
@@ -80,6 +90,8 @@ drop table beacon_category;
 drop table category;
 
 drop table event;
+
+drop table user_events;
 
 drop table location;
 

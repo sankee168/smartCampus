@@ -18,6 +18,7 @@ libraryDependencies ++= Seq(
   "org.projectlombok" % "lombok" % "1.16.8",
   "com.sun.jersey" % "jersey-client" % "1.19",
   "com.google.code.gson" % "gson" % "1.7.1",
+  "io.prediction" % "client" % "0.9.5",
     javaJdbc,
   cache,
   javaWs

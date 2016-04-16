@@ -3,19 +3,19 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.inject.Inject;
+import helpers.ConvertToLogFormat;
+import helpers.PushToMLServer;
 import models.database.*;
+import models.database.Event;
+import play.Logger;
 import play.data.DynamicForm;
 import play.data.FormFactory;
 import play.libs.Json;
-import play.libs.ws.*;
+import play.libs.ws.WSClient;
 import play.mvc.Controller;
 import play.mvc.Result;
 import references.Constants;
-import scala.util.parsing.json.JSONObject;
 import views.html.*;
 
 import javax.persistence.PersistenceException;
@@ -23,18 +23,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.concurrent.CompletionStage;
-
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by mallem on 3/19/16.
@@ -45,10 +41,12 @@ public class EventController extends Controller {
     FormFactory formFactory;
     @Inject
     WSClient ws;
+    ConvertToLogFormat logConvertor = new ConvertToLogFormat();
+    PushToMLServer pushToMLServer = new PushToMLServer();
 
     public Result getEventsByLocation(String location) {
         List<Event> eventList = Ebean.find(Event.class).where().ieq("location", location).findList();
-        return ok(eventList.toString());
+        return ok(events.render(eventList));
     }
 
     public Result getEventsByCategories() {
@@ -58,13 +56,14 @@ public class EventController extends Controller {
         HashSet<Event> events = new HashSet<>();
 
         for (String category : categories) {
-            events.addAll(Ebean.find(Event.class).where().ieq("category", category).ieq("is_active", "1").findList());
+            //events.addAll(Ebean.find(Event.class).where().ieq("category", category).ieq("is_active", "1").findList());
+            events.addAll(Ebean.find(Event.class).where().in("category", categories).ieq("is_active", "1").findList());
         }
 
         return ok(events.toString());
     }
 
-    public Result getEventPage(String deviceId) {
+    public Result createEventPage(String deviceId) {
         boolean isAdmin = false;
         User user = Ebean.find(User.class).where().ieq("device_id", deviceId).findUnique();
         List<Category> categories = Ebean.find(Category.class).findList();
@@ -111,6 +110,10 @@ public class EventController extends Controller {
                     .createdBy(form.get("createdBy")[0])
                     .build();
             event.save();
+            io.prediction.Event eventToBePushed = logConvertor.convertCreatedEvent(event);
+            Logger.info(Constants.KeyWords.LOG_SEPERATOR +  Json.toJson(eventToBePushed).toString());
+            pushToMLServer.pushEvent(eventToBePushed);
+
 
         } catch (PersistenceException p) {
             return badRequest("Event Already Exists");
@@ -140,7 +143,7 @@ public class EventController extends Controller {
         return beacons;
     }
 
-    public Result getEventsByUser(String user) {
+    public Result getEventsByAdmin(String user) {
         List<Event> eventList = Ebean.find(Event.class).where().ieq("createdBy", user).findList();
         return ok(events.render(eventList));
     }
@@ -169,8 +172,8 @@ public class EventController extends Controller {
     }
 
     public Result getStarredEvents(String deviceId) {
-        //todo: return starred events for the user
-        return ok();
+        User user = Ebean.find(User.class).where().ieq("device_id", deviceId).findUnique();
+        return ok(events.render(user.getEvents()));
     }
 
 }

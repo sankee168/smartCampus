@@ -4,9 +4,8 @@ import com.avaje.ebean.Model;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by mallem on 3/19/16.
@@ -26,5 +25,11 @@ public class User extends Model {
     private String role;
 
     private String categories;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_events")
+    private List<Event> events;
+
+
 
 }
