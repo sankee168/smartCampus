@@ -38,10 +38,7 @@ public class BeaconController extends Controller {
         return ok();
     }
 
-    /*
-     * TODO : Need to refactor this based on new changes in Beacon/Location schema.
-     */
-    public Result getEventsByUser(String id, String userId) {
+    public Result getEventsForUser(String id, String userId) {
         User user = Ebean.find(User.class).where().ieq("id", userId).findUnique();
         List<Event> returnEvents = new ArrayList<>();
         Event currEvent;

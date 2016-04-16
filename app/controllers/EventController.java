@@ -141,4 +141,9 @@ public class EventController extends Controller {
         return ok(events.render(user.getEvents()));
     }
 
+    public Result getSingleEventPage(String deviceId, String eventId) {
+        Event curEvent = Ebean.find(Event.class).where().ieq("id", eventId).findUnique();
+        return ok(event.render(deviceId, curEvent));
+    }
+
 }
