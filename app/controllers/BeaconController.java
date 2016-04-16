@@ -12,6 +12,7 @@ import play.mvc.Result;
 import references.Constants;
 import views.html.createUser;
 import views.html.events;
+import views.html.nopermission;
 
 import java.util.*;
 
@@ -75,19 +76,24 @@ public class BeaconController extends Controller {
         User user = Ebean.find(User.class).where().ieq("deviceId", deviceId).findUnique();
         if (user != null) {
             List<Beacon> beacons = Ebean.find(Beacon.class).where().in("id", beaconIds).findList();
-            Iterator<Beacon> beaconIter = beacons.iterator();
-            while (beaconIter.hasNext()) {
-                Beacon currBeacon = beaconIter.next();
-                Iterator<Event> currEventsIterator = currBeacon.getEvents().iterator();
-                while (currEventsIterator.hasNext()) {
-                    Event currEvent = currEventsIterator.next();
-                    if (ifCategoryMatches(user.getCategories(), currEvent.getCategory())) {
-                        returnEvents.add(currEvent);
+            if(beacons.size() != 0) {
+                Iterator<Beacon> beaconIter = beacons.iterator();
+                while (beaconIter.hasNext()) {
+                    Beacon currBeacon = beaconIter.next();
+                    Iterator<Event> currEventsIterator = currBeacon.getEvents().iterator();
+                    while (currEventsIterator.hasNext()) {
+                        Event currEvent = currEventsIterator.next();
+                        if (ifCategoryMatches(user.getCategories(), currEvent.getCategory())) {
+                            returnEvents.add(currEvent);
+                        }
                     }
                 }
-            }
 
-            return ok(events.render(returnEvents));
+                return ok(events.render(returnEvents));
+            }
+            else {
+                return ok(nopermission.render());
+            }
         } else {
             // Redirect the Page to Create the User
             List<Category> categoryList = Ebean.find(Category.class).findList();
