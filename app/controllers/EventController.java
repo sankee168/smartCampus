@@ -92,7 +92,7 @@ public class EventController extends Controller {
      */
     public Result createEvent() {
         Map<String, String[]> form = request().body().asFormUrlEncoded();
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy hh:mm");
         try {
             Date startTime = new Date(format.parse(form.get("startTime")[0]).getTime());
             Date endTime = new Date(format.parse(form.get("endTime")[0]).getTime());
