@@ -41,7 +41,7 @@ public class Location extends Model {
     }
 
     public String getDescription() {
-        return this.getDescription();
+        return this.description;
     }
 }
 

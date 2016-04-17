@@ -14,6 +14,8 @@ libraryDependencies ++= Seq(
   "org.webjars" %% "webjars-play" % "2.4.0-2",
   "org.webjars" % "bootstrap" % "3.0.0" exclude("org.webjars", "jquery"),
   "org.webjars" % "jquery" % "1.8.3",
+  "org.webjars" % "bootstrap-datetimepicker" % "2.3.5",
+  "org.webjars" % "momentjs" % "2.12.0",
   "mysql" % "mysql-connector-java" % "5.1.34",
   "org.projectlombok" % "lombok" % "1.16.8",
   "com.sun.jersey" % "jersey-client" % "1.19",
