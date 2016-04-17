@@ -2,20 +2,32 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import com.google.inject.Inject;
+import helpers.ConvertToLogFormat;
+import helpers.PushToMLServer;
 import models.database.Category;
+import models.database.User;
 import play.Logger;
 import play.data.DynamicForm;
 import play.data.FormFactory;
+import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import references.Constants;
+import views.html.categoryUpdate;
+import views.html.updateSuccess;
 
 import javax.persistence.PersistenceException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by mallem on 4/2/16.
  */
 public class CategoryController extends Controller {
+
+    ConvertToLogFormat logConvertor = new ConvertToLogFormat();
+    PushToMLServer pushToMLServer = new PushToMLServer();
 
     @Inject
     FormFactory formFactory;
@@ -42,5 +54,38 @@ public class CategoryController extends Controller {
             return badRequest("Category Already Exists!!!");
         }
         return ok();
+    }
+
+    public Result getCategoriesPage(String userId) {
+        String[] registeredCat = Ebean.find(User.class).where().ieq("device_id", userId).findUnique().getCategories().split(",");
+        List<String> registeredCategories = new ArrayList<>();
+        for(int i = 0; i < registeredCat.length; i++) {
+            registeredCategories.add(registeredCat[i]);
+        }
+        List<Category> allCategories = Ebean.find(Category.class).findList();
+        return ok(categoryUpdate.render(userId, registeredCategories, allCategories));
+
+    }
+
+    public Result updateCategories(){
+        Map<String, String[]> form = request().body().asFormUrlEncoded();
+        String[] categoryList = form.get("categories");
+        String categories = "";
+        if (categoryList != null) {
+            for (String category : categoryList) {
+                categories += category + ",";
+            }
+        } else {
+            categories += "all";
+        }
+
+        User user = Ebean.find(User.class).where().ieq("device_id", form.get("deviceId")[0]).findUnique();
+        user.setCategories(categories);
+        user.save();
+
+        io.prediction.Event eventToBePushed = logConvertor.convertCreateUser(user);
+        Logger.info(Constants.KeyWords.LOG_SEPERATOR +  Json.toJson(eventToBePushed).toString());
+        pushToMLServer.pushEvent(eventToBePushed);
+        return ok(updateSuccess.render());
     }
 }
