@@ -24,6 +24,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -93,9 +94,8 @@ public class EventController extends Controller {
         Map<String, String[]> form = request().body().asFormUrlEncoded();
         SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy hh:mm");
         try {
-            Date startTime = new Date(format.parse(form.get("startTime")[0]).getTime());
-            Date endTime = new Date(format.parse(form.get("endTime")[0]).getTime());
-
+            Timestamp startTime = new Timestamp(format.parse(form.get("startTime")[0]).getTime());
+            Timestamp endTime = new Timestamp(format.parse(form.get("endTime")[0]).getTime());
             Event event = Event.builder()
                     .name(form.get("name")[0])
                     .description(form.get("description")[0])

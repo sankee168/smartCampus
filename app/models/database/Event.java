@@ -6,6 +6,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -25,9 +26,9 @@ public class Event extends Model {
 
     private String location;
 
-    private Date startTime;
+    private Timestamp startTime;
 
-    private Date endTime;
+    private Timestamp endTime;
 
     private String description;
 
@@ -63,6 +64,26 @@ public class Event extends Model {
 
     public String getCategory() {
         return this.category;
+    }
+
+    public Timestamp getStartTime() {
+        return this.startTime;
+    }
+
+    public Timestamp getEndTime() {
+        return this.endTime;
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public String getLocation() {
+        return this.location;
+    }
+
+    public String getExternalLink() {
+        return this.externalLink;
     }
 
     @Override
