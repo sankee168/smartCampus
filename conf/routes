@@ -18,6 +18,7 @@ POST        /location                             controllers.LocationController
 #GET         /category/all                        controllers.CategoryController.getAll
 #GET         /category/:name                      controllers.CategoryController.getByName(name: String)
 POST        /category                             controllers.CategoryController.createCategory
+GET         /category/:userId                     controllers.CategoryController.getCategoriesPage(userId: String)
 
 #GET         /user/:userName                      controllers.UserController.getUser(userName: String)
 POST        /user                                 controllers.UserController.createUser
@@ -25,6 +26,8 @@ POST        /starred                              controllers.UserController.add
 
 POST        /event/category                       controllers.EventController.getEventsByCategories
 POST        /event                                controllers.EventController.createEvent
+
+POST        /updateCategories                     controllers.CategoryController.updateCategories
 
 GET         /event/new/:adminId                   controllers.EventController.createEventPage(adminId: String)
 GET         /events/:adminId                      controllers.EventController.getEventsByAdmin(adminId: String)

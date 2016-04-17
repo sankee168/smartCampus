@@ -3,9 +3,9 @@ if (window.console) {
 }
 
 function getEventsFromBeacon(id) {
-    setTimeout(function () {
-        $(".events").load("/beacon/"+id);
-    },2000);
+    // setTimeout(function () {
+    //     $(".events").load("/beacon/"+id);
+    // },2000);
 }
 
 $(document).ready(function () {
@@ -14,11 +14,6 @@ $(document).ready(function () {
     $('.reload-events').on('click',function () {
         $('.events').html("<div class=\"col-xs-12 event-loading\"><div>Loading ...</div> <img src=\"/assets/images/loading.gif\" alt=\"\" width=\"20px\"></div>");
         getEventsFromBeacon(1);
-    });
-
-    $(".chosen-select").chosen({
-        max_selected_options: 5,
-        inherit_select_classes: true
     });
 });
 

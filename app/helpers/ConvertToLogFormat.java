@@ -26,7 +26,7 @@ public class ConvertToLogFormat {
     public Event convertCreateUser(User user) {
 
         HashMap<String, Object> map = new HashMap<String, Object>();
-        io.prediction.Event predEvent = new io.prediction.Event();
+        Event predEvent = new Event();
         predEvent.entityId(user.getDeviceId());
         predEvent.entityType(Constants.MlConstants.USER);
         predEvent.event(Constants.MlConstants.SET);
@@ -36,7 +36,7 @@ public class ConvertToLogFormat {
     }
 
     public Event convertStarredEvent(String deviceId, String eventId) {
-        io.prediction.Event predEvent = new io.prediction.Event();
+        Event predEvent = new Event();
         predEvent.entityId(deviceId);
         predEvent.entityType(Constants.MlConstants.USER);
         predEvent.event(Constants.MlConstants.STAR);
@@ -47,7 +47,7 @@ public class ConvertToLogFormat {
     }
 
     public Event convertViewedEvent(String deviceId, String eventId) {
-        io.prediction.Event predEvent = new io.prediction.Event();
+        Event predEvent = new Event();
         predEvent.entityId(deviceId);
         predEvent.entityType(Constants.MlConstants.USER);
         predEvent.event(Constants.MlConstants.VIEW);
