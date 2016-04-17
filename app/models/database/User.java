@@ -31,5 +31,9 @@ public class User extends Model {
     private List<Event> events;
 
 
+    @Override
+    public String toString() {
+        return "name=" + userName + "description=" + role;
+    }
 
 }

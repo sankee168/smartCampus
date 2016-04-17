@@ -37,7 +37,7 @@
   <script type="text/javascript">
     $(document).ready(function(){
       $(".event-single-star-text.unstarred").on('click',function(){
-        $.post( "/starred", {'eventId': @event.getId, 'deviceId': @deviceId})
+        $.post( "/starred", {'eventId': @event.getId, 'deviceId': "@deviceId"})
           .done(function(){
             $(".event-single-star-text.unstarred").addClass("hidden");
             $(".event-single-star-text.starred").removeClass("hidden");

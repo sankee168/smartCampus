@@ -45,7 +45,7 @@ public class EventController extends Controller {
 
     public Result getEventsByLocation(String location) {
         List<Event> eventList = Ebean.find(Event.class).where().ieq("location", location).findList();
-        return ok(events.render(eventList));
+        return ok(events.render(eventList, "abc"));
     }
 
     public Result getEventsByCategories() {
@@ -145,7 +145,7 @@ public class EventController extends Controller {
 
     public Result getEventsByAdmin(String user) {
         List<Event> eventList = Ebean.find(Event.class).where().ieq("createdBy", user).findList();
-        return ok(events.render(eventList));
+        return ok(events.render(eventList, user));
     }
 
     public Result testUI() {
@@ -168,13 +168,13 @@ public class EventController extends Controller {
         json.get(Constants.KeyWords.ML_EVENT_IDS);
 
         List<String> eventIds = new ArrayList<>();
-        return ok(events.render(Ebean.find(Event.class).where().in("id", eventIds).findList()));
+        return ok(events.render(Ebean.find(Event.class).where().in("id", eventIds).findList(), deviceId));
     }
 
     public Result getStarredEvents(String deviceId) {
         System.out.println("Starred Req Received");
         User user = Ebean.find(User.class).where().ieq("device_id", deviceId).findUnique();
-        return ok(events.render(user.getEvents()));
+        return ok(events.render(user.getEvents(), deviceId));
     }
 
     public Result getSingleEventPage(String deviceId, String eventId) {

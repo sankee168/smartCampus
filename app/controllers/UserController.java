@@ -15,6 +15,8 @@ import play.mvc.Result;
 import references.Constants;
 
 import javax.persistence.PersistenceException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -65,14 +67,20 @@ public class UserController extends Controller {
         DynamicForm form = formFactory.form().bindFromRequest();
         User user = Ebean.find(User.class).where().ieq("device_id", form.get("deviceId")).findUnique();
         Event event = Ebean.find(Event.class).where().ieq("id", form.get("eventId")).findUnique();
-        user.getEvents().add(event);
+        List<Event> eventsList = new ArrayList<>();
+        eventsList.addAll(user.getEvents());
+        eventsList.add(event);
+        user.setEvents(eventsList);
+        //event.getUsers().add(user);
+        // user.getEvents().add(event);
 
         try {
             user.save();
+            //event.save();
         } catch (PersistenceException e) {
             return badRequest("Already Starred Event");
         }
-        //todo: psuh to mlserver
+        //todo: push to mlserver
         io.prediction.Event eventToBePushed = logFormat.convertStarredEvent(form.get("deviceId"), form.get("eventId"));
         Logger.info(Constants.KeyWords.LOG_SEPERATOR + Json.toJson(eventToBePushed).toString());
         return ok();

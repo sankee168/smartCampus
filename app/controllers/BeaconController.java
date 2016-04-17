@@ -25,7 +25,7 @@ public class BeaconController extends Controller {
     public Result getBeaconById(String id) {
 
         Beacon beacon = Ebean.find(Beacon.class).where().ieq("id", id).findUnique();
-        return ok(events.render(beacon.getEvents()));
+        return ok(events.render(beacon.getEvents(), "abc"));
     }
 
     public Result createBeacon() {
@@ -43,7 +43,7 @@ public class BeaconController extends Controller {
     }
 
     public Result getEventsForUser(String id, String userId) {
-        User user = Ebean.find(User.class).where().ieq("id", userId).findUnique();
+        User user = Ebean.find(User.class).where().ieq("device_id", userId).findUnique();
         List<Event> returnEvents = new ArrayList<>();
         Event currEvent;
         Beacon beacon = Ebean.find(Beacon.class).where().ieq("id", id).findUnique();
@@ -56,7 +56,7 @@ public class BeaconController extends Controller {
             }
         }
 
-        return ok(events.render(returnEvents));
+        return ok(events.render(returnEvents, userId));
     }
 
     public Result getEventsByBeacons() {
@@ -92,7 +92,7 @@ public class BeaconController extends Controller {
                     }
                 }
 
-                return ok(events.render(returnEvents));
+                return ok(events.render(returnEvents, deviceId));
             }
             else {
                 return ok(nopermission.render("You do not have required permissions"));

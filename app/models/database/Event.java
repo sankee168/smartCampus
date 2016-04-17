@@ -64,4 +64,9 @@ public class Event extends Model {
     public String getCategory() {
         return this.category;
     }
+
+    @Override
+    public String toString() {
+        return "name=" + name + "description=" + description;
+    }
 }
