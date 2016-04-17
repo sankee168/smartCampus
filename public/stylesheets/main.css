@@ -63,19 +63,29 @@
 
 body {
     /*background: url("/assets/images/smartCampus.jpg") no-repeat  center center fixed #000;*/
-    background-image: url("/assets/images/smartCampus.jpg");
+    /*background-image: url("/assets/images/smartCampus.jpg");
 
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
-    background-size: cover;;
+    background-size: cover;
     background-repeat: no-repeat;
     background-color: #000;
+    */
 
 }
 
 .event:nth-of-type(odd) {
     background-color: #ccc;
+}
+
+.event:hover {
+    background-color: red;
+}
+
+a.event-link {
+    color: #000;
+    text-decoration: none !important;
 }
 
 .event-body {
