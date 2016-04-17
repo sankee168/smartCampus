@@ -78,7 +78,7 @@ public class EventController extends Controller {
                 List<Location> locations = Ebean.find(Location.class).findList();
                 return ok(createEvent.render(locations, categories, deviceId));
             } else {
-                return ok(nopermission.render());
+                return ok(nopermission.render("You do not have reqd permissions"));
             }
         } else {
             return ok(createUser.render(deviceId, categories));

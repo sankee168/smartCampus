@@ -38,6 +38,10 @@ public class BeaconController extends Controller {
         return ok();
     }
 
+    public Result noBeacons() {
+        return ok(nopermission.render("No Beacons Around"));
+    }
+
     public Result getEventsForUser(String id, String userId) {
         User user = Ebean.find(User.class).where().ieq("id", userId).findUnique();
         List<Event> returnEvents = new ArrayList<>();
@@ -91,7 +95,7 @@ public class BeaconController extends Controller {
                 return ok(events.render(returnEvents));
             }
             else {
-                return ok(nopermission.render());
+                return ok(nopermission.render("You do not have required permissions"));
             }
         } else {
             // Redirect the Page to Create the User
