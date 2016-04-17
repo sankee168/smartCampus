@@ -2,9 +2,7 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import com.google.inject.Inject;
-import helpers.ConvertToLogFormat;
 import models.database.*;
-import play.Logger;
 import play.data.DynamicForm;
 import play.data.FormFactory;
 import play.mvc.Controller;
@@ -58,6 +56,7 @@ public class BeaconController extends Controller {
     }
 
     public Result getEventsByBeacons() {
+
         String deviceId = "";
         String[] beaconIds = new String[Constants.KeyWords.TOTAL_NUMBER_OF_BEACONS];
         List<String> categories = new ArrayList<>();
@@ -72,7 +71,7 @@ public class BeaconController extends Controller {
                 System.out.println("Invalid query parameter");
             }
         }
-
+        System.out.println("Req Received " + deviceId);
         User user = Ebean.find(User.class).where().ieq("deviceId", deviceId).findUnique();
         if (user != null) {
             List<Beacon> beacons = Ebean.find(Beacon.class).where().in("id", beaconIds).findList();

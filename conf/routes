@@ -11,15 +11,15 @@ GET         /beacons                              controllers.BeaconController.g
 
 
 
-#GET         /location/all                 controllers.LocationController.getAll
-#GET         /location/:name               controllers.LocationController.getByName(name: String)
+#GET         /location/all                        controllers.LocationController.getAll
+#GET         /location/:name                      controllers.LocationController.getByName(name: String)
 POST        /location                             controllers.LocationController.createLocation
 
-#GET         /category/all                 controllers.CategoryController.getAll
-#GET         /category/:name               controllers.CategoryController.getByName(name: String)
+#GET         /category/all                        controllers.CategoryController.getAll
+#GET         /category/:name                      controllers.CategoryController.getByName(name: String)
 POST        /category                             controllers.CategoryController.createCategory
 
-#GET         /user/:userName                controllers.UserController.getUser(userName: String)
+#GET         /user/:userName                      controllers.UserController.getUser(userName: String)
 POST        /user                                 controllers.UserController.createUser
 POST        /starred                              controllers.UserController.addEventToUser
 
@@ -37,5 +37,4 @@ GET         /                                     controllers.EventController.te
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                         controllers.Assets.versioned(path="/public", file: Asset)
-
 GET         /webjars/*file                        controllers.WebJarAssets.at(file)

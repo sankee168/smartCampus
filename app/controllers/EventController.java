@@ -7,7 +7,6 @@ import com.google.inject.Inject;
 import helpers.ConvertToLogFormat;
 import helpers.PushToMLServer;
 import models.database.*;
-import models.database.Event;
 import play.Logger;
 import play.data.DynamicForm;
 import play.data.FormFactory;
@@ -173,6 +172,7 @@ public class EventController extends Controller {
     }
 
     public Result getStarredEvents(String deviceId) {
+        System.out.println("Starred Req Received");
         User user = Ebean.find(User.class).where().ieq("device_id", deviceId).findUnique();
         return ok(events.render(user.getEvents()));
     }
