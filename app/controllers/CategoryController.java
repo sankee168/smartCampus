@@ -14,6 +14,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import references.Constants;
 import views.html.categoryUpdate;
+import views.html.createUser;
 import views.html.updateSuccess;
 
 import javax.persistence.PersistenceException;
@@ -57,13 +58,22 @@ public class CategoryController extends Controller {
     }
 
     public Result getCategoriesPage(String userId) {
-        String[] registeredCat = Ebean.find(User.class).where().ieq("device_id", userId).findUnique().getCategories().split(",");
-        List<String> registeredCategories = new ArrayList<>();
-        for(int i = 0; i < registeredCat.length; i++) {
-            registeredCategories.add(registeredCat[i]);
+        User user = Ebean.find(User.class).where().ieq("device_id", userId).findUnique();
+        if(user!=null) {
+            String[] registeredCat = user.getCategories().split(",");
+            List<String> registeredCategories = new ArrayList<>();
+            for (int i = 0; i < registeredCat.length; i++) {
+                registeredCategories.add(registeredCat[i]);
+            }
+            List<Category> allCategories = Ebean.find(Category.class).findList();
+            return ok(categoryUpdate.render(userId, registeredCategories, allCategories));
         }
-        List<Category> allCategories = Ebean.find(Category.class).findList();
-        return ok(categoryUpdate.render(userId, registeredCategories, allCategories));
+
+
+        else {
+            List<Category> categoryList = Ebean.find(Category.class).findList();
+            return ok(createUser.render(userId, categoryList));
+        }
 
     }
 

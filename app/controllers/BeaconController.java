@@ -2,6 +2,7 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import com.google.inject.Inject;
+import helpers.Utilities;
 import models.database.*;
 import play.data.DynamicForm;
 import play.data.FormFactory;
@@ -13,6 +14,7 @@ import views.html.events;
 import views.html.nopermission;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by mallem on 4/5/16.
@@ -21,11 +23,11 @@ public class BeaconController extends Controller {
 
     @Inject
     FormFactory formFactory;
-
+    Utilities utilities =new Utilities();
     public Result getBeaconById(String id) {
 
         Beacon beacon = Ebean.find(Beacon.class).where().ieq("id", id).findUnique();
-        return ok(events.render(beacon.getEvents(), "abc"));
+        return ok(events.render(utilities.removeDuplicate(beacon.getEvents()), "abc"));
     }
 
     public Result createBeacon() {
@@ -56,7 +58,7 @@ public class BeaconController extends Controller {
             }
         }
 
-        return ok(events.render(returnEvents, userId));
+        return ok(events.render(utilities.removeDuplicate(returnEvents), userId));
     }
 
     public Result getEventsByBeacons() {
@@ -92,7 +94,10 @@ public class BeaconController extends Controller {
                     }
                 }
 
-                return ok(events.render(returnEvents, deviceId));
+
+//                return ok(events.render(returnEvents, deviceId));
+
+                return ok(events.render(utilities.removeDuplicate(returnEvents), deviceId));
             }
             else {
                 return ok(nopermission.render("You do not have required permissions"));
