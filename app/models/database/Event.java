@@ -61,6 +61,26 @@ public class Event extends Model {
         return this.description;
     }
 
+    public int getId() {
+        return this.id;
+    }
+
+    public String getExternalLink() {
+        return this.externalLink;
+    }
+
+    public String getLocation() {
+        return this.location;
+    }
+
+    public Date getStartTime() {
+        return this.startTime;
+    }
+
+    public Date getEndTime() {
+        return this.endTime;
+    }
+
     public String getCategory() {
         return this.category;
     }

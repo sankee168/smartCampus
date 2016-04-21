@@ -26,7 +26,8 @@ public class User extends Model {
 
     private String categories;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
     @JoinTable(name = "user_events")
     private List<Event> events;
 
@@ -34,6 +35,15 @@ public class User extends Model {
     @Override
     public String toString() {
         return "name=" + userName + "description=" + role;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        User cmp = (User) obj;
+        if (this.deviceId.equals(cmp.getDeviceId())) {
+            return true;
+        }
+        return false;
     }
 
 }

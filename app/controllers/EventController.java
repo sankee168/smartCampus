@@ -178,11 +178,18 @@ public class EventController extends Controller {
     }
 
     public Result getSingleEventPage(String deviceId, String eventId) {
+        Boolean isStarred = false;
         Event curEvent = Ebean.find(Event.class).where().ieq("id", eventId).findUnique();
+        User user = Ebean.find(User.class).where().ieq("deviceId", deviceId).findUnique();
+        List<User> users = new ArrayList<>();
+        users.addAll(curEvent.getUsers());
+        if (users.contains(user)) {
+            isStarred = true;
+        }
         io.prediction.Event eventToBePushed = logConvertor.convertViewedEvent(deviceId, eventId);
         Logger.info(Constants.KeyWords.LOG_SEPERATOR +  Json.toJson(eventToBePushed).toString());
         pushToMLServer.pushEvent(eventToBePushed);
-        return ok(event.render(deviceId, curEvent));
+        return ok(event.render(deviceId, curEvent, isStarred));
     }
 
     public Result getNoLiveEventsPage() {
