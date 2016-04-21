@@ -1,8 +1,6 @@
 @import models.database._
-@(deviceId: String)(event: Event)
-  @*
-  TODO: Add JQuery Support to call API for starred events so that page is not refreshed.
-  *@
+@(deviceId: String)(event: Event)(isStarred: Boolean)
+
 @main("Event") {
   <div class="col-xs-12 event-single">
     <div class="event-single-heading">
@@ -10,7 +8,6 @@
         @event.getName
       </div>
       <div class="event-single-time">
-        @*// TODO: change db structure from date to datetime*@
         <div><i class="fa fa-calendar-check-o" aria-hidden="true"></i> @event.getStartTime - @event.getEndTime</div>
       </div>
     </div>
@@ -36,6 +33,10 @@
 
   <script type="text/javascript">
     $(document).ready(function(){
+      @if(isStarred){
+      $(".event-single-star-text.unstarred").addClass("hidden");
+      $(".event-single-star-text.starred").removeClass("hidden");
+      }
       $(".event-single-star-text.unstarred").on('click',function(){
         $.post( "/starred", {'eventId': @event.getId, 'deviceId': "@deviceId"})
           .done(function(){
