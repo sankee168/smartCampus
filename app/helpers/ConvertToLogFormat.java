@@ -23,6 +23,8 @@ public class ConvertToLogFormat {
         return predEvent;
     }
 
+
+
     public Event convertCreateUser(User user) {
 
         HashMap<String, Object> map = new HashMap<String, Object>();
@@ -39,7 +41,7 @@ public class ConvertToLogFormat {
         Event predEvent = new Event();
         predEvent.entityId(deviceId);
         predEvent.entityType(Constants.MlConstants.USER);
-        predEvent.event(Constants.MlConstants.STAR);
+        predEvent.event(Constants.MlConstants.VIEW);
         predEvent.targetEntityId(eventId);
         predEvent.targetEntityType(Constants.MlConstants.EVENT);
 
@@ -48,6 +50,12 @@ public class ConvertToLogFormat {
 
     public Event convertViewedEvent(String deviceId, String eventId) {
         Event predEvent = new Event();
+//        if (deviceId.equals("02:00:00:00:00:00")) {
+//            predEvent.entityId("sank");
+//        }
+//        else if(deviceId.equals("64:09:80:89:C9:DF")) {
+//            predEvent.entityId("smitha");
+//        }
         predEvent.entityId(deviceId);
         predEvent.entityType(Constants.MlConstants.USER);
         predEvent.event(Constants.MlConstants.VIEW);

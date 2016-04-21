@@ -3,6 +3,8 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.google.inject.Inject;
 import helpers.ConvertToLogFormat;
 import helpers.PushToMLServer;
@@ -169,21 +171,12 @@ public class EventController extends Controller {
 
         User user = Ebean.find(User.class).where().ieq("device_id", deviceId).findUnique();
         if (user != null) {
-            String result = "";
-            URL url = new URL(Constants.Urls.ML_URL_GET + deviceId + "/");
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String line;
-            while ((line = rd.readLine()) != null) {
-                result = result + line;
-            }
-            rd.close();
-            JsonNode json = Json.parse(result);
-            //this will have the json variable and convert this into eventIds
-            json.get(Constants.KeyWords.ML_EVENT_IDS);
-
             List<String> eventIds = new ArrayList<>();
+            JsonObject temp = new PushToMLServer().getDetails(deviceId);
+            JsonArray itemScores = temp.getAsJsonArray("itemScores");
+            for(int i = 0; i< itemScores.size(); i++) {
+                eventIds.add(itemScores.get(i).getAsJsonObject().get("item").getAsString());
+            }
             List<Event> eventList = Ebean.find(Event.class).where().in("id", eventIds).findList();
             return ok(events.render(utilities.removeDuplicate(eventList), deviceId));
         } else {
