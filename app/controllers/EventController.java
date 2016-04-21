@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 import helpers.ConvertToLogFormat;
 import helpers.PushToMLServer;
+import helpers.Utilities;
 import models.database.*;
 import play.Logger;
 import play.data.DynamicForm;
@@ -24,6 +25,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,10 +44,11 @@ public class EventController extends Controller {
     WSClient ws;
     ConvertToLogFormat logConvertor = new ConvertToLogFormat();
     PushToMLServer pushToMLServer = new PushToMLServer();
+    Utilities utilities = new Utilities();
 
     public Result getEventsByLocation(String location) {
         List<Event> eventList = Ebean.find(Event.class).where().ieq("location", location).findList();
-        return ok(events.render(eventList, "abc"));
+        return ok(events.render(utilities.removeDuplicate(eventList), "abc"));
     }
 
     public Result getEventsByCategories() {
@@ -93,9 +96,8 @@ public class EventController extends Controller {
         Map<String, String[]> form = request().body().asFormUrlEncoded();
         SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy hh:mm");
         try {
-            Date startTime = new Date(format.parse(form.get("startTime")[0]).getTime());
-            Date endTime = new Date(format.parse(form.get("endTime")[0]).getTime());
-
+            Timestamp startTime = new Timestamp(format.parse(form.get("startTime")[0]).getTime());
+            Timestamp endTime = new Timestamp(format.parse(form.get("endTime")[0]).getTime());
             Event event = Event.builder()
                     .name(form.get("name")[0])
                     .description(form.get("description")[0])
@@ -111,7 +113,7 @@ public class EventController extends Controller {
             event.save();
             //todo: push to mlserver
             io.prediction.Event eventToBePushed = logConvertor.convertCreatedEvent(event);
-            Logger.info(Constants.KeyWords.LOG_SEPERATOR +  Json.toJson(eventToBePushed).toString());
+            Logger.info(Constants.KeyWords.LOG_SEPERATOR + Json.toJson(eventToBePushed).toString());
             pushToMLServer.pushEvent(eventToBePushed);
 
 
@@ -144,8 +146,19 @@ public class EventController extends Controller {
     }
 
     public Result getEventsByAdmin(String user) {
-        List<Event> eventList = Ebean.find(Event.class).where().ieq("createdBy", user).findList();
-        return ok(events.render(eventList, user));
+        User curUser = Ebean.find(User.class).where().ieq("device_id", user).findUnique();
+        if(curUser != null) {
+            List<Event> eventList = Ebean.find(Event.class).where().ieq("createdBy", user).findList();
+            if(eventList.size() != 0) {
+                return ok(events.render(utilities.removeDuplicate(eventList), user));
+            }
+            else return ok(nocreatedevents.render());
+        }
+        else{
+            List<Category> categoryList = Ebean.find(Category.class).findList();
+            return ok(createUser.render(user, categoryList));
+        }
+
     }
 
     public Result testUI() {
@@ -153,28 +166,42 @@ public class EventController extends Controller {
     }
 
     public Result getRecommendedEvents(String deviceId) throws IOException {
-        String result = "";
-        URL url = new URL(Constants.Urls.ML_URL_GET + deviceId + "/");
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-        BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        String line;
-        while ((line = rd.readLine()) != null) {
-            result = result + line;
-        }
-        rd.close();
-        JsonNode json = Json.parse(result);
-        //this will have the json variable and convert this into eventIds
-        json.get(Constants.KeyWords.ML_EVENT_IDS);
 
-        List<String> eventIds = new ArrayList<>();
-        return ok(events.render(Ebean.find(Event.class).where().in("id", eventIds).findList(), deviceId));
+        User user = Ebean.find(User.class).where().ieq("device_id", deviceId).findUnique();
+        if (user != null) {
+            String result = "";
+            URL url = new URL(Constants.Urls.ML_URL_GET + deviceId + "/");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String line;
+            while ((line = rd.readLine()) != null) {
+                result = result + line;
+            }
+            rd.close();
+            JsonNode json = Json.parse(result);
+            //this will have the json variable and convert this into eventIds
+            json.get(Constants.KeyWords.ML_EVENT_IDS);
+
+            List<String> eventIds = new ArrayList<>();
+            List<Event> eventList = Ebean.find(Event.class).where().in("id", eventIds).findList();
+            return ok(events.render(utilities.removeDuplicate(eventList), deviceId));
+        } else {
+            List<Category> categoryList = Ebean.find(Category.class).findList();
+            return ok(createUser.render(deviceId, categoryList));
+        }
     }
 
     public Result getStarredEvents(String deviceId) {
         System.out.println("Starred Req Received");
         User user = Ebean.find(User.class).where().ieq("device_id", deviceId).findUnique();
-        return ok(events.render(user.getEvents(), deviceId));
+
+        if (user != null) {
+            return ok(events.render(utilities.removeDuplicate(user.getEvents()), deviceId));
+        } else {
+            List<Category> categoryList = Ebean.find(Category.class).findList();
+            return ok(createUser.render(deviceId, categoryList));
+        }
     }
 
     public Result getSingleEventPage(String deviceId, String eventId) {
@@ -187,7 +214,7 @@ public class EventController extends Controller {
             isStarred = true;
         }
         io.prediction.Event eventToBePushed = logConvertor.convertViewedEvent(deviceId, eventId);
-        Logger.info(Constants.KeyWords.LOG_SEPERATOR +  Json.toJson(eventToBePushed).toString());
+        Logger.info(Constants.KeyWords.LOG_SEPERATOR + Json.toJson(eventToBePushed).toString());
         pushToMLServer.pushEvent(eventToBePushed);
         return ok(event.render(deviceId, curEvent, isStarred));
     }

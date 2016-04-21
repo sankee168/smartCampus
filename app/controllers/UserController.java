@@ -13,6 +13,7 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import references.Constants;
+import views.html.welcome;
 
 import javax.persistence.PersistenceException;
 import java.util.ArrayList;
@@ -59,7 +60,7 @@ public class UserController extends Controller {
         io.prediction.Event eventToBePushed = logFormat.convertCreateUser(user);
         Logger.info(Constants.KeyWords.LOG_SEPERATOR + Json.toJson(eventToBePushed).toString());
         pushToMLServer.pushEvent(eventToBePushed);
-        return ok();
+        return ok(welcome.render());
     }
 
     /* Add events starred by users. Should be called from each Event page */
